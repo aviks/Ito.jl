@@ -18,6 +18,12 @@ c=UKLSECalendar(); year=2010
 @assert !isWorkingDay(c, ymd(2010, December, 27))
 @assert !isWorkingDay(c, ymd(2010, December, 28))
 
+#US Calendars
+@assert !isWorkingDay(USSettlementCalendar(), ymd(2012, July, 4))
+@assert !isWorkingDay(USNYSECalendar(), ymd(2012, July, 4))
+@assert !isWorkingDay(USGovernmentBondCalendar(), ymd(2012, July, 4))
+@assert !isWorkingDay(USNERCCalendar(), ymd(2012, July, 4))
+
 #2012 India LSE Calendar
 
 c=IndiaNSECalendar()

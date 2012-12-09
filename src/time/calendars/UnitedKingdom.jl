@@ -52,8 +52,7 @@ function isWorkingDay(c::UKLSECalendar, dt::CalendarTime)
 	y=year(dt);
 	em=easterMonday(c,y)
 
-	!(isWeekend(c,w)
-        
+	!(isWeekend(c,w)       
             # New Year's Day (possibly moved to Monday)
             || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m == January)
             # Good Friday

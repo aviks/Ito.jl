@@ -82,6 +82,7 @@ easterMonday(c::OrthodoxCalendar, y::Int) = o_easter_monday[y-1900]
 isWeekend(c::Union(WesternCalendar, OrthodoxCalendar), dow::Int) = (dow == 7 || dow == 1)
 
 include(find_in_path("Ito/src/time/calendars/UnitedKingdom"))
+include(find_in_path("Ito/src/time/calendars/UnitedStates"))
 include(find_in_path("Ito/src/time/calendars/India"))
 
 end

@@ -7,11 +7,11 @@ type IndiaNSECalendar <: IndiaCalendar; end
 string(::IndiaNSECalendar) = "National Stock Exchange of India (Equities Trading)"
 
 function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
-	d=day(dt);
+	d=day(dt)
 	dd=dayofyear(dt)
-	m=month(dt);
-	w=dayofweek(dt);
-	y=year(dt);
+	m=month(dt)
+	w=dayofweek(dt)
+	y=year(dt)
 	em=easterMonday(c,y)
 
 	if (isWeekend(c,w)
@@ -28,7 +28,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
             # Christmas
             || (d == 25 && m == December))
             
-            return false;
+            return false
     end
 
          if (y == 2005) 
@@ -47,7 +47,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
                 # Guru Nanak Jayanti
                 || (d == 15 && m == November))
                 
-                return false;
+                return false
             end
         end
 
@@ -69,7 +69,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
                 # Ramzan Id
                 || (d == 25 && m == October))
                 
-                return false;
+                return false
             end
         end
 
@@ -91,7 +91,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
                 # Bakri Id (again)
                 || (d == 21 && m == December))
                 
-                return false;
+                return false
             end
         end
 
@@ -121,7 +121,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
                 # Bakri Id
                 || (d == 9 && m == December))
                 
-                return false;
+                return false
             end
         end
 
@@ -151,7 +151,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
                 # Moharram (again)
                 || (d == 28 && m == December))
                 
-                return false;
+                return false
             end
         end
 
@@ -173,7 +173,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
                 # Moharram
                 || (d == 17 && m == December))
                 
-                return false;
+                return false
             end   
         end
 
@@ -199,7 +199,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
                 # Moharram
                 || (d == 6 && m == December))
                 
-                return false;
+                return false
              end
         end
 
@@ -223,7 +223,7 @@ function isWorkingDay(c::IndiaNSECalendar, dt::CalendarTime)
                 # Gurunanak Jayanti
                 || (d == 28 && m == November))
                 
-                return false;
+                return false
              end
         end
 
