@@ -1,5 +1,8 @@
 module Integration
 
+export AdaptiveSimpsonsIntegration,
+        integrate
+
 abstract IntegrationMethod
 
 type AdaptiveSimpsonsIntegration <: IntegrationMethod
