@@ -4,9 +4,11 @@ module Statistics
 import Distributions
 using Distributions
 
-import Base.mean, Base.inv, Base.std
+import Base.mean, Base.std, Base.var
 
-export inv,mean, kurtosis, skewness
+export mean,var, std, gaussian_regret, gaussian_percentile, gaussian_average_shortfall, gaussian_value_at_risk, 
+		gaussian_expected_shortfall, gaussian_shortfall, gaussian_top_percentile, gaussian_downside_variance,
+		gaussian_downside_variance, gaussian_downside_deviation, kurtosis, skewness
 
 mean(v::AbstractVector, w::AbstractVector) = weighted_mean(v,w)
 var(v::AbstractVector, w::AbstractVector) = var(v, mean(v,w), true) 
@@ -15,11 +17,11 @@ std(v::AbstractVector, w::AbstractVector) = sqrt(var(v, w))
 skewness(v::AbstractVector, w::AbstractVector) = skewness(v, mean(v,w), true)
 kurtosis(v::AbstractVector, w::AbstractVector) = kurtosis(v, mean(v,w), true)
 
-gaussian_downside_variance(v::AbstractVector, w::AbstractVector) = guassian_regret(v,w,0)
+gaussian_downside_variance(v::AbstractVector, w::AbstractVector) = gaussian_regret(v,w,0)
 gassian_downside_deviation(v::AbstractVector, w::AbstractVector) = sqrt(gaussian_downside_variance(v,w))
 
 #Dembo, Freeman "The Rules Of Risk", Wiley (2001)
-function guassian_regret(v::AbstractVector, w::AbstractVector, target::Real)
+function gaussian_regret(v::AbstractVector, w::AbstractVector, target::Real)
 	m=mean(v,w)
 	s = std(v, w)
 	variance = var(v, w)
@@ -31,26 +33,23 @@ function guassian_regret(v::AbstractVector, w::AbstractVector, target::Real)
 	(alpha*f1 - beta*f2) / alpha
 end
 
-function guassian_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)
-	@assert percentile > 0
-	@assert percentile < 1.0
+function gaussian_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)
+	@assert percentile > 0 && percentile < 1.0
 	m=mean(v,w)
 	s=std(v,m,true)
 	quantile(Normal(m,s), percentile)
 end
 
-function gaussian_top_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)
-	guassian_percentile(v,w,percentile)
-end
+gaussian_top_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)=gaussian_percentile(v,w,1-percentile)
 
 function gaussian_potential_upside(v::AbstractVector, w::AbstractVector, percentile::Real)
 	@assert percentile <1.0 && percentile >= 0.9
-	max(guassian_percentile(v,w,percentile),0.0)
+	max(gaussian_percentile(v,w,percentile),0.0)
 end
 
 function gaussian_value_at_risk(v::AbstractVector, w::AbstractVector, percentile::Real)
 	@assert percentile <1.0 && percentile >= 0.9
-	-1*min(guassian_percentile(v,w,1-percentile),0.0)
+	-1*min(gaussian_percentile(v,w,1-percentile),0.0)
 end
 
 #Artzner, Delbaen, Eber and Heath, "Coherent measures of risk", Mathematical Finance 9 (1999)
@@ -100,11 +99,12 @@ function kurtosis(v::AbstractVector, m, corrected::Bool)
 	n=numel(v)
 	vv=v-m
 	x=sum (((vv.*vv).*vv).*vv) / n
-	sigma = std(v,false)
-	k=x/(sigma*sigma*sigma*sigma)
 	if corrected
 		@assert n>3
-		((n-1)/((n-2)*(n-3)) ) * (((n+1)*k) - 3*(n+1) )  
+		c1=(n/(n-1.0)) * (n/(n-2.0)) * ((n+1.0)/(n-3.0))
+		c2=3.0 * ((n-1.0)/(n-2.0)) * ((n-1.0)/(n-3.0));
+		#(n*(n+1)*k)/((n-1)*(n-2)*(n-3))  - 3*(n-1)*(n-1)/( (n-2)*(n-3))   
+		c1*x/(var(v,true)^2) -c2
 	else 
 		k - 3
 	end
