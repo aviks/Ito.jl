@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ito.jl by aviks</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ito.jl</h1>
+        <p>A Julia package for quantitative finance</p>
+
+        <p class="view"><a href="https://github.com/aviks/Ito.jl">View the Project on GitHub <small>aviks/Ito.jl</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/aviks/Ito.jl/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/aviks/Ito.jl/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/aviks/Ito.jl">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Ito, a Julia package for financial mathematics</h1>
+
+<p>Ito is a collection of modules containing algorithms for efficient quantitative finance. </p>
+
+<p>This is an ambitious undertaking, and we are just getting started. However, it is hoped that even in this early state, the algorithms will be useful in themselves. We are obviously looking for help in implementing more of our requirements. </p>
+
+<h2>Why Julia</h2>
+
+<p>Julia is a fast, dynamic language particularly suited for quantitative programs. It includes fast primitives for many required operations (e.g. fast matrix operations, FFTs) and a growing ecosystem for additional quantitative algorithms(e.g. the Distributions module)</p>
+
+<p>One of the key differentiators for Julia is the fact that programs written in Julia are almost as fast code written in C. Hence, for example, almost all Julia primitives are implemented in Julia itself. For our purposes, this means that we get the power, expressiveness and productivity of writing quantitative techniques in a high level language, while still getting the speed of a low level implementation. This fact has a few important side effects</p>
+
+<ul>
+<li>Its much easier to understand existing codebases, and therefore contribute</li>
+<li>Julia is therefore highly suited for all pedagogic requirements </li>
+<li>Kernels and objective functions can be written in Julia itself, which can then be passed to optimisation routines in Julia. This makes for a much smoother programming experience, while still maintaining performance. </li>
+<li>Eventually, we will be able to leverage Julia's distributed computing capabilities to write efficient distributed algorithms. </li>
+</ul><h2>Current Status</h2>
+
+<ul>
+<li>Comprehensive financial statistics are implemented</li>
+<li>Numerical integration algorithm using adaptive Simpsons rule implemented</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/aviks">aviks</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-37085988-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
