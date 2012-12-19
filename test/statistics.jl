@@ -1,4 +1,5 @@
-load("Ito")
+require("Ito")
+require("test/runtests")
 
 using Ito.Statistics
 
@@ -14,6 +15,11 @@ w = ones(10) #weights
 #Note: Wolfram alpha produces unadjusted value, Octave produces strange result
 @assert_approx_eq_eps kurtosis(v, w)  -0.151799637209 10e-9
 
-w=[1,2,3,4,5,6,7,8,9,10]
+@assert_approx_eq regret(v, w, 4) 2.2222222222222223
+@assert_approx_eq average_shortfall(v, w, 4) 1.3333333333333333
+
+w=[1:10]
 @assert_approx_eq mean(v, w) 4.76363636363636
+
+#TODO Lots more tests with realistic data
 

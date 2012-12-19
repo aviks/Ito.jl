@@ -3,19 +3,31 @@ module Statistics
 
 import Distributions
 using Distributions
+import Debug
+using Debug
 
 import Base.mean, Base.std, Base.var
 
-export mean,var, std, gaussian_regret, gaussian_percentile, gaussian_average_shortfall, gaussian_value_at_risk, 
-		gaussian_expected_shortfall, gaussian_shortfall, gaussian_top_percentile, gaussian_downside_variance,
-		gaussian_downside_variance, gaussian_downside_deviation, kurtosis, skewness
+export mean, var, std, kurtosis, skewness,
+		gaussian_regret, gaussian_percentile, gaussian_top_percentile,  gaussian_shortfall, gaussian_average_shortfall, 
+		gaussian_expected_shortfall, gaussian_downside_variance, gaussian_downside_deviation, gaussian_value_at_risk,
+		semi_variance, semi_deviation, percentile, top_percentile, downside_variance, downside_deviation, 
+		shortfall, average_shortfall, expected_shortfall, value_at_risk, regret
 
 mean(v::AbstractVector, w::AbstractVector) = weighted_mean(v,w)
-var(v::AbstractVector, w::AbstractVector) = var(v, mean(v,w), true) 
+
+function var(v::AbstractVector, w::AbstractVector, m) 
+	n=length(v)
+	@assert (n>1)
+	s=expectation_value(v, w, (x)->(x-m)^2, (x)->true) [1]
+	
+	return s*n/(n-1)
+end
 std(v::AbstractVector, w::AbstractVector) = sqrt(var(v, w))
 
-skewness(v::AbstractVector, w::AbstractVector) = skewness(v, mean(v,w), true)
-kurtosis(v::AbstractVector, w::AbstractVector) = kurtosis(v, mean(v,w), true)
+var(v::AbstractVector, w::AbstractVector) = var(v, w, mean(v,w))
+skewness(v::AbstractVector, w::AbstractVector) = skewness(v,w, mean(v,w), true)
+kurtosis(v::AbstractVector, w::AbstractVector) = kurtosis(v,w, mean(v,w), true)
 
 gaussian_downside_variance(v::AbstractVector, w::AbstractVector) = gaussian_regret(v,w,0)
 gassian_downside_deviation(v::AbstractVector, w::AbstractVector) = sqrt(gaussian_downside_variance(v,w))
@@ -80,12 +92,102 @@ function gaussian_average_shortfall(v::AbstractVector, w::AbstractVector, target
 	(target - m) + s*s*g/gi
 end
 
-error_estimate(v::AbstractVector, w::AbstractVector) = sqrt(var(v,w))
+error_estimate(v::AbstractVector, w::AbstractVector) = sqrt(var(v,w)/numel(v))
 
-function skewness(v::AbstractVector, m, corrected::Bool)
+semi_variance(v::AbstractVector, w::AbstractVector) = regret(v, mean(v,w))
+semi_deviation(v::AbstractVector, w::AbstractVector) = sqrt(semi_variance(v,w))
+
+downside_variance(v) = regret(v, 0)
+downside_deviation(v) = sqrt(downside_variance(v))
+
+#Dembo and Freeman, "The Rules Of Risk", Wiley (2001)
+function regret(v::AbstractVector, w::AbstractVector, target::Real) 
 	n=numel(v)
-	vv=v-m
-	y=sum((vv.*vv).*vv) / n
+	(r,_)=expectation_value(v, w, (x)->(x-target)^2, (x)->(x<target))
+	r*n/(n-1)
+end
+
+potential_upside(v::AbstractVector, w::AbstractVector, p::Real) = max(percentile(v,w,p),0)
+value_at_risk(v::AbstractVector, w::AbstractVector, p::Real) = -1*min(percentile(v,w,1-p),0)
+
+#Artzner, Delbaen, Eber and Heath, "Coherent measures of risk", Mathematical Finance 9 (1999)
+function expected_shortfall(v::AbstractVector, w::AbstractVector, p::Real) 
+	@assert p>= 0.9 && p <1
+	target = -1* value_at_risk(v, w, p)
+
+	(r,n)=expectation_value(v, w, (x)->(x), (x)->(x<target))
+	return -1 * min(r, 0.0)
+end
+
+function average_shortfall(v::AbstractVector, w::AbstractVector, target::Real)
+	return expectation_value(v, w, (x)->(target-x), (x)->(x<target)) [1]
+end
+
+function shortfall(v::AbstractVector, w::AbstractVector, target::Real) 
+	return expectation_value(v, w, (x)->(1), (x)->(x<target)) [1]
+end
+
+function expectation_value(v::AbstractVector, w::AbstractVector, mapfun::Function, filterfun::Function)
+	@assert length(v) == length(w)
+	@assert numel(v) >0
+
+	s=0
+	sw=0
+	n=0
+	for i in 1:length(v)
+		if filterfun(v[i])
+			s = s + mapfun(v[i])*w[i]
+			sw = sw + w[i]
+			n=n+1
+		end
+	end
+
+	if n==0
+		 return NaN, 0
+	end
+	return s/sw , n 
+end
+
+
+#Weighted percentile. 
+#Warning! Both value and weight arrays are copied and sorted
+function percentile(v::AbstractVector, w::AbstractVector, p::Real) 
+	@assert p>0 && p<1
+	wts = sum(w)
+	@assert wts > 0
+	vs, ord = Base.sortperm(v)
+
+	k=1; l=numel(v)
+	i = w[ord[k]]
+	target = p*wts
+
+	while (i<target && k!=l)
+		k=k+1
+		i = i + w[ord[k]]
+	end
+	return vs[k]
+end
+
+function top_percentile(v::AbstractVector, w::AbstractVector, p::Real) 
+	@assert p>0 && p<1
+	wts = sum(w)
+	@assert wts > 0
+	vs, ord = Base.sortperm(v)
+
+	l=1; k=numel(v)
+	i = w[ord[k]]
+	target = p*wts
+
+	while (i<target && k!=l)
+		k=k-1
+		i = i + w[ord[k]]
+	end
+	return vs[k]
+end
+
+function skewness(v::AbstractVector, w::AbstractVector, m, corrected::Bool)
+	n=numel(v)
+	y=expectation_value(v, w, (x)->(x-m)^3, (x)->true)
 	sigma = std(v,false)
 	if corrected
 		@assert n>2
@@ -95,16 +197,16 @@ function skewness(v::AbstractVector, m, corrected::Bool)
 	end
 end
 
-function kurtosis(v::AbstractVector, m, corrected::Bool)
+function kurtosis(v::AbstractVector, w::AbstractVector, m, corrected::Bool)
 	n=numel(v)
 	vv=v-m
-	x=sum (((vv.*vv).*vv).*vv) / n
+	y=expectation_value(v, w, (x)->(x-m)^3, (x)->true)
 	if corrected
 		@assert n>3
 		c1=(n/(n-1.0)) * (n/(n-2.0)) * ((n+1.0)/(n-3.0))
 		c2=3.0 * ((n-1.0)/(n-2.0)) * ((n-1.0)/(n-3.0));
 		#(n*(n+1)*k)/((n-1)*(n-2)*(n-3))  - 3*(n-1)*(n-1)/( (n-2)*(n-3))   
-		c1*x/(var(v,true)^2) -c2
+		c1*y/(var(v,true)^2) -c2
 	else 
 		k - 3
 	end
