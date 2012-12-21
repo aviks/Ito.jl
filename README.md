@@ -1,3 +1,4 @@
-#Ito, a Julia package for financial mathematics
+#Ito, a toolkit for financial computing in Julia
 
-THIS IS A WORK IN PROGRESS. NOT READY FOR PRIME TIME.
+Documentation at http://aviks.github.com/Ito.jl/
+
