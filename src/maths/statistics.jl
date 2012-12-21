@@ -3,8 +3,8 @@ module Statistics
 
 import Distributions
 using Distributions
-import Debug
-using Debug
+# import Debug
+# using Debug
 
 import Base.mean, Base.std, Base.var
 

@@ -1,5 +1,6 @@
 
 load("Ito")
+load("test/runtests")
 
 using Calendar
 using Ito
@@ -27,43 +28,28 @@ c=UKLSECalendar(); year=2010
 #2012 India LSE Calendar
 
 c=IndiaNSECalendar()
-#New Year, Sunday
-@assert !isWorkingDay(c, ymd(2012, January, 1))
-#Republic Day
-@assert !isWorkingDay(c, ymd(2012, January, 26))
-#Shivratri
-@assert !isWorkingDay(c, ymd(2012, February, 20))
-#Holi
-@assert !isWorkingDay(c, ymd(2012, March, 8))
-#Ram Navami, Sunday
-@assert !isWorkingDay(c, ymd(2012, April, 1))
-#Mahavir Jayanti
-@assert !isWorkingDay(c, ymd(2012, April, 5))
-#Good Friday
-@assert !isWorkingDay(c, ymd(2012, April, 6))
-#Ambedkar Jayanti, Saturday
-@assert !isWorkingDay(c, ymd(2012, April, 14))
-#May Day
-@assert !isWorkingDay(c, ymd(2012, May, 1))
-#Independence Day
-@assert !isWorkingDay(c, ymd(2012, August, 15))
-#Ramzan
-@assert !isWorkingDay(c, ymd(2012, August, 20))
-#Ganesh Chaturthi
-@assert !isWorkingDay(c, ymd(2012, September, 19))
-#Gandhi Jayanti
-@assert !isWorkingDay(c, ymd(2012, October, 2))
-#Dussera
-@assert !isWorkingDay(c, ymd(2012, October, 24))
-#Bakri Id, Saturday
-@assert !isWorkingDay(c, ymd(2012, October, 27))
-#Diwali
-@assert !isWorkingDay(c, ymd(2012, November, 14))
-#Moharram, Sunday
-@assert !isWorkingDay(c, ymd(2012, November, 25))
-#Guru Nanak Jayanti
-@assert !isWorkingDay(c, ymd(2012, November, 28))
-#Christmas
-@assert !isWorkingDay(c, ymd(2012, December, 25))
 
+@assert !isWorkingDay(c, ymd(2012, January, 1)) #New Year, Sunday
+@assert !isWorkingDay(c, ymd(2012, January, 26)) #Republic Day
+@assert !isWorkingDay(c, ymd(2012, February, 20)) #Shivratri
+@assert !isWorkingDay(c, ymd(2012, March, 8)) #Holi
+@assert !isWorkingDay(c, ymd(2012, April, 1)) #Ram Navami, Sunday
+@assert !isWorkingDay(c, ymd(2012, April, 5)) #Mahavir Jayanti
+@assert !isWorkingDay(c, ymd(2012, April, 6)) #Good Friday
+@assert !isWorkingDay(c, ymd(2012, April, 14)) #Ambedkar Jayanti, Saturday
+@assert !isWorkingDay(c, ymd(2012, May, 1)) #May Day
+@assert !isWorkingDay(c, ymd(2012, August, 15)) #Independence Day
+@assert !isWorkingDay(c, ymd(2012, August, 20)) #Ramzan
+@assert !isWorkingDay(c, ymd(2012, September, 19)) #Ganesh Chaturthi
+@assert !isWorkingDay(c, ymd(2012, October, 2)) #Gandhi Jayanti
+@assert !isWorkingDay(c, ymd(2012, October, 24)) #Dussera
+@assert !isWorkingDay(c, ymd(2012, October, 27)) #Bakri Id, Saturday
+@assert !isWorkingDay(c, ymd(2012, November, 14)) #Diwali
+@assert !isWorkingDay(c, ymd(2012, November, 25)) #Moharram, Sunday
+@assert !isWorkingDay(c, ymd(2012, November, 28)) #Guru Nanak Jayanti
+@assert !isWorkingDay(c, ymd(2012, December, 25)) #Christmas
+
+@assert_approx_eq 0.497724380567 Ito.Time.yearfraction(Ito.Time.ISDAActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
+@assert_approx_eq 0.50 Ito.Time.yearfraction(Ito.Time.ISMAActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
+@assert_approx_eq 0.497267759563 Ito.Time.yearfraction(Ito.Time.AFBActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
 
