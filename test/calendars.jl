@@ -49,7 +49,35 @@ c=IndiaNSECalendar()
 @assert !isWorkingDay(c, ymd(2012, November, 28)) #Guru Nanak Jayanti
 @assert !isWorkingDay(c, ymd(2012, December, 25)) #Christmas
 
-@assert_approx_eq 0.497724380567 Ito.Time.yearfraction(Ito.Time.ISDAActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
-@assert_approx_eq 0.50 Ito.Time.yearfraction(Ito.Time.ISMAActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
-@assert_approx_eq 0.497267759563 Ito.Time.yearfraction(Ito.Time.AFBActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
+#DayCount
+
+@assert_approx_eq 0.497724380567 yearfraction(ISDAActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
+@assert_approx_eq 0.50 yearfraction(ISMAActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
+@assert_approx_eq 0.497267759563 yearfraction(AFBActualActual(), ymd(2003,November,1), ymd(2004, May, 1))
+
+@assert_approx_eq 0.410958904110 yearfraction(ISDAActualActual(), ymd(1999,February,1), ymd(1999, July, 1))
+@assert_approx_eq 0.410958904110 yearfraction(ISMAActualActual(), ymd(1999,February,1), ymd(1999, July, 1), ymd(1998, July, 1), ymd(1999, July, 1))
+@assert_approx_eq 0.410958904110 yearfraction(AFBActualActual(), ymd(1999,February,1), ymd(1999, July, 1))
+
+@assert_approx_eq_eps 1.001377348600 yearfraction(ISDAActualActual(), ymd(1999,July,1), ymd(2000, July, 1)) 1e-10
+@assert_approx_eq 1 yearfraction(ISMAActualActual(), ymd(1999,July,1), ymd(2000, July, 1), ymd(1999, July, 1), ymd(2000, July, 1))
+@assert_approx_eq 1 yearfraction(AFBActualActual(), ymd(1999,July,1), ymd(2000, July, 1)) 
+
+@assert_approx_eq 0.915068493151 yearfraction(ISDAActualActual(), ymd(2002,August,15), ymd(2003, July, 15))
+@assert_approx_eq 0.915760869565 yearfraction(ISMAActualActual(), ymd(2002,August,15), ymd(2003, July, 15), ymd(2003, January, 15), ymd(2003, July, 15))
+@assert_approx_eq 0.915068493151 yearfraction(AFBActualActual(), ymd(2002,August,15), ymd(2003, July, 15))
+
+@assert_approx_eq 0.504004790778 yearfraction(ISDAActualActual(), ymd(2003,July,15), ymd(2004, January, 15))
+@assert_approx_eq 0.5 yearfraction(ISMAActualActual(), ymd(2003,July,15), ymd(2004, January, 15), ymd(2003, July, 15), ymd(2004, January, 15))
+@assert_approx_eq 0.504109589041 yearfraction(AFBActualActual(), ymd(2003,July,15), ymd(2004, January, 15))
+
+@assert_approx_eq 0.503892506924 yearfraction(ISDAActualActual(), ymd(1999,July,30), ymd(2000, January, 30))
+@assert_approx_eq 0.5 yearfraction(ISMAActualActual(), ymd(1999,July,30), ymd(2000, January, 30), ymd(1999,July,30), ymd(2000, January, 30))
+@assert_approx_eq 0.504109589041 yearfraction(AFBActualActual(), ymd(1999,July,30), ymd(2000, January, 30))
+
+@assert_approx_eq 0.415300546448 yearfraction(ISDAActualActual(), ymd(2000,January,30), ymd(2000, June, 30))
+@assert_approx_eq 0.417582417582 yearfraction(ISMAActualActual(), ymd(2000,January,30), ymd(2000, June, 30), ymd(2000,January,30), ymd(2000, July, 30))
+@assert_approx_eq 0.415300546448 yearfraction(AFBActualActual(), ymd(2000,January,30), ymd(2000, June, 30))
+
+
 
