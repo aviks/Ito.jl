@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 #Ito, an open source toolkit for financial computing in Julia
 
 ##About Ito
@@ -6,7 +10,15 @@ Ito is a collection of Julia modules containing algorithms for efficient quantit
 
 Think of this as [Quantlib](http://quantlib.org) for Julia. Our API is significantly influenced by Quantlib. 
 
-This is an ambitious undertaking, and we are just getting started. However, it is hoped that even in this early state, the implemented algorithms can for an useful basis for your own solutions. We are obviously looking for help -- all contributions are gratefully accepted.
+We are just getting started. However, it is hoped that even in this early state, the implemented algorithms can for an useful basis for your own solutions. We are obviously looking for help -- all contributions are gratefully accepted.
+
+##Installation
+
+```julia
+require("pkg")
+Pkg.init() #Once per Julia install
+Pkg.add("JSON")
+```
 
 ## Current Status
 
