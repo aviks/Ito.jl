@@ -52,45 +52,36 @@
       </div>
       </header>
       <section>
-	<h1 id="toc_0">Ito, an open source toolkit for financial computing in Julia</h1>
+	<h1 id="toc_5">Basic Mathematical Routines</h1>
 
-<h2 id="toc_1">About Ito</h2>
+<p>Some of these might be moved into their own packages eventaully</p>
 
-<p>Ito is a collection of Julia modules containing algorithms for efficient quantitative finance. </p>
+<h3 id="toc_6">Integrations</h3>
 
-<p>Think of this as <a href="http://quantlib.org">Quantlib</a> for Julia. Our API is significantly influenced by Quantlib. </p>
+<p><code>module Ito.Integration</code> </p>
 
-<p>We are just getting started. However, it is hoped that even in this early state, the implemented algorithms can for an useful basis for your own solutions. We are obviously looking for help -- all contributions are gratefully accepted.</p>
+<p><code>integrate(f, method, a, b)</code></p>
 
-<h2 id="toc_2">Installation</h2>
-<div class="highlight"><pre><code class="julia"><span class="n">require</span><span class="p">(</span><span class="s">&quot;pkg&quot;</span><span class="p">)</span>
-<span class="n">Pkg</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c">#Once per Julia install</span>
-<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;JSON&quot;</span><span class="p">)</span>
+<p>$$ \int_{a}^{b} f(x) dx $$</p>
+
+<p>The only integration method currently implemented is <code>AdaptiveSimpsonsIntegration</code></p>
+
+<p><code>AdaptiveSimpsonsIntegration(accuracy, maximum_iterations)</code></p>
+
+<p><code>AdaptiveSimpsonsIntegration()</code></p>
+
+<p>Default accuracy of $10^{-9}$ and maximum $50$ iterations</p>
+
+<p>Examples:</p>
+<div class="highlight"><pre><code class="julia"><span class="n">integrate</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="n">AdaptiveSimpsonsIntegration</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span><span class="nb">pi</span><span class="p">)</span>  <span class="c"># 2</span>
+
+<span class="n">integrate</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">^</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">^</span><span class="mi">2</span><span class="p">,</span> 
+          <span class="n">AdaptiveSimpsonsIntegration</span><span class="p">(</span><span class="mf">10e-9</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="nb">pi</span><span class="p">)</span> <span class="c"># 2pi</span>
+
+<span class="n">using</span> <span class="n">Distributions</span>
+<span class="n">integrate</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">pdf</span><span class="p">(</span><span class="n">Normal</span><span class="p">(),</span><span class="n">x</span><span class="p">),</span> <span class="n">AdaptiveSimpsonsIntegration</span><span class="p">(),</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="c"># 1.0</span>
 </code></pre>
 </div>
-
-<h2 id="toc_3">Current Status</h2>
-
-<ul>
-<li>Day count conventions are implemented</li>
-<li>Holiday calendar framework, and holiday list for major sites are implemented</li>
-<li>Comprehensive financial statistics are implemented</li>
-<li>Numerical integration algorithm using adaptive Simpsons rule implemented</li>
-<li>Fundamental interest rate calculations are implemented (discount factor etc)</li>
-</ul>
-
-<h2 id="toc_4">About Julia</h2>
-
-<p>Julia is a fast, dynamic language particularly suited for quantitative programs. It includes fast primitives for many required operations (e.g. fast matrix operations, FFTs) and a growing ecosystem for additional quantitative algorithms(e.g. <a href="https://github.com/JuliaStats/Distributions.jl">Distributions</a> and  <a href="https://github.com/johnmyleswhite/Optim.jl">Optimsation</a> )</p>
-
-<p>The performance of the Julia interpreter (based on LLVM) means that almost all Julia primitives are implemented in Julia itself. For our purposes, this means that we get the power, expressiveness and productivity of writing quantitative techniques in a high level language, while still getting the speed of a low level implementation. This fact has a few important side effects</p>
-
-<ul>
-<li>Its much easier to understand existing codebases, and therefore contribute</li>
-<li>Julia is therefore highly suited for all pedagogic requirements </li>
-<li>Kernels and objective functions can be written in Julia itself, which can then be passed to optimisation routines in Julia. This makes for a much smoother programming experience, while still maintaining performance. </li>
-<li>Eventually, we will be able to leverage Julia&#39;s distributed computing capabilities to write efficient distributed algorithms. </li>
-</ul>
 
       </section>
       <footer>

@@ -52,45 +52,81 @@
       </div>
       </header>
       <section>
-	<h1 id="toc_0">Ito, an open source toolkit for financial computing in Julia</h1>
+	<h1 id="toc_11">Date and Time</h1>
 
-<h2 id="toc_1">About Ito</h2>
+<p><code>module Ito.Time</code></p>
 
-<p>Ito is a collection of Julia modules containing algorithms for efficient quantitative finance. </p>
+<h3 id="toc_12">Day count conventions</h3>
 
-<p>Think of this as <a href="http://quantlib.org">Quantlib</a> for Julia. Our API is significantly influenced by Quantlib. </p>
-
-<p>We are just getting started. However, it is hoped that even in this early state, the implemented algorithms can for an useful basis for your own solutions. We are obviously looking for help -- all contributions are gratefully accepted.</p>
-
-<h2 id="toc_2">Installation</h2>
-<div class="highlight"><pre><code class="julia"><span class="n">require</span><span class="p">(</span><span class="s">&quot;pkg&quot;</span><span class="p">)</span>
-<span class="n">Pkg</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c">#Once per Julia install</span>
-<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;JSON&quot;</span><span class="p">)</span>
+<p>Day count conventions are specified via the following types:</p>
+<div class="highlight"><pre><code class="text">DayCount
++- Actual360
++- Business252
++- Actual365
++- Thirty360
+   +- BondThirty360
+   +- EuroBondThirty360
+   +- ItalianThirty360
++ ActualActual 
+   +- ISMAActualActual
+   +- ISDAActualActual
+   +- AFBActualActual
 </code></pre>
 </div>
 
-<h2 id="toc_3">Current Status</h2>
+<p><code>Business252(BusinessCalendar bc)</code></p>
 
-<ul>
-<li>Day count conventions are implemented</li>
-<li>Holiday calendar framework, and holiday list for major sites are implemented</li>
-<li>Comprehensive financial statistics are implemented</li>
-<li>Numerical integration algorithm using adaptive Simpsons rule implemented</li>
-<li>Fundamental interest rate calculations are implemented (discount factor etc)</li>
-</ul>
+<p>Create an instance <code>Business252</code> day count convention, with a <code>BusinessCalendar</code> as an input. All other 
+day count conventions have a zero argument constructor. </p>
 
-<h2 id="toc_4">About Julia</h2>
+<p><code>daycount(dc::DayCount, date_start, date_end)</code></p>
 
-<p>Julia is a fast, dynamic language particularly suited for quantitative programs. It includes fast primitives for many required operations (e.g. fast matrix operations, FFTs) and a growing ecosystem for additional quantitative algorithms(e.g. <a href="https://github.com/JuliaStats/Distributions.jl">Distributions</a> and  <a href="https://github.com/johnmyleswhite/Optim.jl">Optimsation</a> )</p>
+<p>Number of days between the two dates, counted according the specified daycount convention</p>
 
-<p>The performance of the Julia interpreter (based on LLVM) means that almost all Julia primitives are implemented in Julia itself. For our purposes, this means that we get the power, expressiveness and productivity of writing quantitative techniques in a high level language, while still getting the speed of a low level implementation. This fact has a few important side effects</p>
+<p><code>yearfraction(dc::Daycount, date_start, date_end)</code></p>
 
-<ul>
-<li>Its much easier to understand existing codebases, and therefore contribute</li>
-<li>Julia is therefore highly suited for all pedagogic requirements </li>
-<li>Kernels and objective functions can be written in Julia itself, which can then be passed to optimisation routines in Julia. This makes for a much smoother programming experience, while still maintaining performance. </li>
-<li>Eventually, we will be able to leverage Julia&#39;s distributed computing capabilities to write efficient distributed algorithms. </li>
-</ul>
+<p>Number of days between the two dates, divided by the number of days in a year, according 
+to the specified daycount convention</p>
+
+<p><code>yearfraction(dc::ISMAAActualActual, date_start, date_end, reference_date_start, reference_date_end)</code></p>
+
+<p>Year fraction for the ISMAA Actual/Actual daycount convention, which requires as input the reference
+start and end dates, typically the coupon dates.  </p>
+
+<h3 id="toc_13">HolidayCalendars</h3>
+
+<p>Holiday Calendars are specified using a heirarchy of types. Typically an abstract type is present for
+a country, and composite types for each specific market within the country. All the composite types can
+be created via a zero argument constructor</p>
+
+<p>The following types are present 
+currently. More types will be added as further holiday calendars are implemented</p>
+<div class="highlight"><pre><code class="text">BusinessCalendar
++- OrthodoxCalendar
++- WesternCalendar
+   +- UKCalendar
+      +- UKSettlementCalendar
+      +- UKLMECalendar
+      +- UKLSECalendar
+   +- USCalendar
+      +- USSettlementCalendar
+      +- USGovernmentBondCalendar
+      +- USNERCCalendar
+      +- USNYSECalendar
+   +- IndiaCalendar
+      +IndiaNSECalendar
+</code></pre>
+</div>
+
+<p><code>isWorkingDay(c::BusinessCalendar, date)</code></p>
+
+<p>Returns false if the input date is a holiday in the specified calendar, true otherwise</p>
+
+<p><code>businessDaysBetween(c::BusinessCalendar, from, to, includeFirst::Bool,  includeLast::Bool)</code></p>
+
+<p><code>businessDaysBetween(c::BusinessCalendar, from, to)</code></p>
+
+<p>The number of business days between two days</p>
 
       </section>
       <footer>
