@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Ito.jl by aviks</title>
+    <title>Ito.jl -- Financial Computing in Julia</title>
 
     <link rel="stylesheet" href="res/styles.css">
     <link rel="stylesheet" href="res/pygment_trac.css">
@@ -48,6 +48,7 @@
            <li><a href="maths.html">Maths</a></li>
            <li><a href="time.html">Time</a></li>
            <li><a href="statistics.html">Statistics</a></li>
+           <li><a href="term_structure.html">Term Structure</a></li>
         </ul>
       </div>
       </header>
@@ -70,126 +71,95 @@
 
 <p><code>kurtosis(values::AbstractVector, weights::AbstractVector)</code></p>
 
-<p><code>error_estimate(v::AbstractVector, w::AbstractVector)</code></p>
-
-<p>$\sigma / \sqrt N $</p>
+<p><code>error_estimate(v::AbstractVector, w::AbstractVector)</code><br>
+$\sigma / \sqrt N $</p>
 
 <h3 id="toc_9">Risk Statistics</h3>
 
-<p><code>semi_variance(v::AbstractVector, w::AbstractVector)</code></p>
+<p><code>semi_variance(v::AbstractVector, w::AbstractVector)</code><br>
+Returns the variance of observations below the mean. <br>
+See Markowitz (1959)<br>
+$$ \frac{N}{N-1} \mathrm{E}\left[ (x-\langle x \rangle)^2 \;|\;        x &lt; \langle x \rangle \right] $$</p>
 
-<p>Returns the variance of observations below the mean. </p>
+<p><code>semi_deviation(v::AbstractVector, w::AbstractVector)</code><br>
+The square root of semi variance</p>
 
-<p>See Markowitz (1959)</p>
+<p><code>downside_variance(v::AbstractVector, w::AbstractVector)</code> <br>
+The variance of observations below 0.0<br>
+$$ \frac{N}{N-1} \mathrm{E}\left[ x^2 \;|\;        x &lt; 0 \right] $$</p>
 
-<p>$$ \frac{N}{N-1} \mathrm{E}\left[ (x-\langle x \rangle)^2 \;|\;        x &lt; \langle x \rangle \right] $$</p>
+<p><code>downside_deviation(v::AbstractVector, w::AbstractVector)</code> <br>
+The square root of the downside variance</p>
 
-<p><code>semi_deviation(v::AbstractVector, w::AbstractVector)</code></p>
-
-<p>The square root of semi variance</p>
-
-<p><code>downside_variance(v::AbstractVector, w::AbstractVector)</code> </p>
-
-<p>The variance of observations below 0.0</p>
-
-<p>$$ \frac{N}{N-1} \mathrm{E}\left[ x^2 \;|\;        x &lt; 0 \right] $$</p>
-
-<p><code>downside_deviation(v::AbstractVector, w::AbstractVector)</code> </p>
-
-<p>The square root of the downside variance</p>
-
-<p><code>regret(v::AbstractVector, w::AbstractVector, target::Real)</code></p>
-
-<p>The variance of observations below target</p>
-
-<p>$$ \frac{N}{N-1} \mathrm{E}\left[ (x-t)^2 \;|\; x &lt; t \right] $$</p>
-
-<p>See Dembo and Freeman, &quot;The Rules Of Risk&quot;, Wiley (2001).</p>
+<p><code>regret(v::AbstractVector, w::AbstractVector, target::Real)</code><br>
+The variance of observations below target<br>
+$$ \frac{N}{N-1} \mathrm{E}\left[ (x-t)^2 \;|\; x &lt; t \right] $$<br>
+See Dembo and Freeman, &quot;The Rules Of Risk&quot;, Wiley (2001).</p>
 
 <p><code>top_percentile(v::AbstractVector, w::AbstractVector, p::Real)</code></p>
 
 <p><code>percentile(v::AbstractVector, w::AbstractVector, p::Real)</code></p>
 
-<p><code>shortfall(v::AbstractVector, w::AbstractVector, target::Real)</code></p>
-
-<p>Probability of missing the given target</p>
-
-<p>$$ \mathrm{E}\left[ \Theta \;|\; (-\infty,\infty) \right]<br>
-\\ \text  where  \\
- \Theta(x) =  \begin{cases}
-    1 &amp; x &lt; t \\
+<p><code>shortfall(v::AbstractVector, w::AbstractVector, target::Real)</code><br>
+Probability of missing the given target<br>
+$$ \mathrm{E}\left[ \Theta \;|\; (-\infty,\infty) \right]<br><br>
+\\ \text  where  \\<br>
+ \Theta(x) =  \begin{cases}<br>
+    1 &amp; x &lt; t \\<br>
      0  &amp; x \geq t  \end{cases}  $$</p>
 
-<p><code>average_shortfall(v::AbstractVector, w::AbstractVector, target::Real)</code></p>
+<p><code>average_shortfall(v::AbstractVector, w::AbstractVector, target::Real)</code><br>
+Averaged shorfall below a target<br>
+$$ \mathrm{E}\left[ t-x \;|\; x &lt; t \right] $$</p>
 
-<p>Averaged shorfall below a target</p>
+<p><code>expected_shortfall(v::AbstractVector, w::AbstractVector, p::Real)</code><br>
+Expected Shortfall at a given percentile. This is the expected loss in case that the loss exceeded a VaR threshold. <br>
+Also know as conditional value-at-risk.<br>
+$$ \mathrm{E}\left[ x \;|\; x &lt; \mathrm{VaR}(p) \right ] , p \in [0.9,1) $$<br>
+See Artzner, Delbaen, Eber and Heath, &quot;Coherent measures of risk&quot;, Mathematical Finance 9 (1999)</p>
 
-<p>$$ \mathrm{E}\left[ t-x \;|\; x &lt; t \right] $$</p>
+<p><code>potential_upside(v::AbstractVector, w::AbstractVector, p::Real)</code><br>
+potential upside (the reciprocal of VAR) at a given percentile $ p \in [0.9,1) $ </p>
 
-<p><code>expected_shortfall(v::AbstractVector, w::AbstractVector, p::Real)</code></p>
-
-<p>Expected Shortfall at a given percentile. This is the expected loss in case that the loss exceeded a VaR threshold. 
-Also know as conditional value-at-risk.</p>
-
-<p>$$ \mathrm{E}\left[ x \;|\; x &lt; \mathrm{VaR}(p) \right ] , p \in [0.9,1) $$</p>
-
-<p>See Artzner, Delbaen, Eber and Heath, &quot;Coherent measures of risk&quot;, Mathematical Finance 9 (1999)</p>
-
-<p><code>potential_upside(v::AbstractVector, w::AbstractVector, p::Real)</code></p>
-
-<p>potential upside (the reciprocal of VAR) at a given percentile $ p \in [0.9,1) $ </p>
-
-<p><code>value_at_risk(v::AbstractVector, w::AbstractVector, p::Real)</code></p>
-
-<p>Value at Risk at a given percentile $ p \in [0.9,1) $  </p>
+<p><code>value_at_risk(v::AbstractVector, w::AbstractVector, p::Real)</code><br>
+Value at Risk at a given percentile $ p \in [0.9,1) $  </p>
 
 <h3 id="toc_10">Guassian Risk Statistics</h3>
 
-<p><code>gaussian_downside_variance(v::AbstractVector, w::AbstractVector)</code></p>
-
-<p>Gaussian assumption downside variance</p>
-
-<p>$$ \frac{N}{N-1} \times \frac{\sum_{i=1}^{N} \theta \times x_i^{2}}{ \sum_{i=1}^{N} w_i} 
-\begin{cases}
-\theta  = 0  \text{ if } x &gt; 0  \\ 
-\theta  = 1 \text{ if }  x &lt;0
+<p><code>gaussian_downside_variance(v::AbstractVector, w::AbstractVector)</code><br>
+Gaussian assumption downside variance<br>
+$$ \frac{N}{N-1} \times \frac{\sum_{i=1}^{N} \theta \times x_i^{2}}{ \sum_{i=1}^{N} w_i} <br>
+\begin{cases}<br>
+\theta  = 0  \text{ if } x &gt; 0  \\ <br>
+\theta  = 1 \text{ if }  x &lt;0<br>
 \end{cases} $$</p>
 
-<p><code>gaussian_downside_deviation(v::AbstractVector, w::AbstractVector)</code></p>
+<p><code>gaussian_downside_deviation(v::AbstractVector, w::AbstractVector)</code><br>
+The square root of the gaussian downside variance</p>
 
-<p>The square root of the gaussian downside variance</p>
+<p><code>gaussian_regret(v::AbstractVector, w::AbstractVector, target::Real)</code><br>
+$$ \frac{\sum w_i (min(0, x_i-target))^2 }{\sum w_i} $$</p>
 
-<p><code>gaussian_regret(v::AbstractVector, w::AbstractVector, target::Real)</code></p>
+<p><code>gaussian_expected_shortfall(v::AbstractVector, w::AbstractVector, percentile::Real)</code><br>
+Gaussian assumption expected Shortfall at a given percentile. Also know as conditional value-at-risk.<br>
+$$ \mathrm{E}\left[ x \;|\; x &lt; \mathrm{VaR}(p) \right ] , p \in [0.9,1) $$<br>
+See Artzner, Delbaen, Eber and Heath, &quot;Coherent measures of risk&quot;, Mathematical Finance 9 (1999)</p>
 
-<p>$$ \frac{\sum w_i (min(0, x_i-target))^2 }{\sum w_i} $$</p>
-
-<p><code>gaussian_expected_shortfall(v::AbstractVector, w::AbstractVector, percentile::Real)</code></p>
-
-<p>Gaussian assumption expected Shortfall at a given percentile. Also know as conditional value-at-risk.</p>
-
-<p>$$ \mathrm{E}\left[ x \;|\; x &lt; \mathrm{VaR}(p) \right ] , p \in [0.9,1) $$</p>
-
-<p>See Artzner, Delbaen, Eber and Heath, &quot;Coherent measures of risk&quot;, Mathematical Finance 9 (1999)</p>
-
-<p><code>gaussian_shortfall(v::AbstractVector, w::AbstractVector, target::Real)</code></p>
-
-<p>Gaussian assumption shortfall (observations below target) </p>
+<p><code>gaussian_shortfall(v::AbstractVector, w::AbstractVector, target::Real)</code><br>
+Gaussian assumption shortfall (observations below target) </p>
 
 <p><code>gaussian_average_shortfall(v::AbstractVector, w::AbstractVector, target::Real)</code></p>
 
 <p><code>gaussian_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)</code></p>
 
-<p><code>gaussian_top_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)</code></p>
+<p><code>gaussian_top_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)</code><br>
+$ percentile \in (0,1) $</p>
 
-<p>$ percentile \in (0,1) $</p>
+<p><code>gaussian_potential_upside(v::AbstractVector, w::AbstractVector, percentile::Real)</code><br>
+$ percentile \in [0.9,1) $</p>
 
-<p><code>gaussian_potential_upside(v::AbstractVector, w::AbstractVector, percentile::Real)</code></p>
-
-<p>$ percentile \in [0.9,1) $</p>
-
-<p><code>gaussian_value_at_risk(v::AbstractVector, w::AbstractVector, percentile::Real)</code></p>
-
-<p>$ percentile \in [0.9,1) $</p>
+<p><code>gaussian_value_at_risk(v::AbstractVector, w::AbstractVector, percentile::Real)</code><br>
+$ percentile \in [0.9,1) $</p>
 
       </section>
       <footer>

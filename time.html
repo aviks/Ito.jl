@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Ito.jl by aviks</title>
+    <title>Ito.jl -- Financial Computing in Julia</title>
 
     <link rel="stylesheet" href="res/styles.css">
     <link rel="stylesheet" href="res/pygment_trac.css">
@@ -48,15 +48,16 @@
            <li><a href="maths.html">Maths</a></li>
            <li><a href="time.html">Time</a></li>
            <li><a href="statistics.html">Statistics</a></li>
+           <li><a href="term_structure.html">Term Structure</a></li>
         </ul>
       </div>
       </header>
       <section>
-	<h1 id="toc_11">Date and Time</h1>
+	<h1 id="toc_15">Date and Time</h1>
 
 <p><code>module Ito.Time</code></p>
 
-<h3 id="toc_12">Day count conventions</h3>
+<h3 id="toc_16">Day count conventions</h3>
 
 <p>Day count conventions are specified via the following types:</p>
 <div class="highlight"><pre><code class="text">DayCount
@@ -74,33 +75,23 @@
 </code></pre>
 </div>
 
-<p><code>Business252(BusinessCalendar bc)</code></p>
+<p><code>Business252(BusinessCalendar bc)</code><br>
+Create an instance <code>Business252</code> day count convention, with a <code>BusinessCalendar</code> as an input. All other day count conventions have a zero argument constructor. </p>
 
-<p>Create an instance <code>Business252</code> day count convention, with a <code>BusinessCalendar</code> as an input. All other 
-day count conventions have a zero argument constructor. </p>
+<p><code>daycount(dc::DayCount, date_start, date_end)</code><br>
+Number of days between the two dates, counted according the specified daycount convention</p>
 
-<p><code>daycount(dc::DayCount, date_start, date_end)</code></p>
+<p><code>yearfraction(dc::Daycount, date_start, date_end)</code><br>
+Number of days between the two dates, divided by the number of days in a year, according to the specified daycount convention</p>
 
-<p>Number of days between the two dates, counted according the specified daycount convention</p>
+<p><code>yearfraction(dc::ISMAAActualActual, date_start, date_end, reference_date_start, reference_date_end)</code><br>
+Year fraction for the ISMAA Actual/Actual daycount convention, which requires as input the reference start and end dates, typically the coupon dates.  </p>
 
-<p><code>yearfraction(dc::Daycount, date_start, date_end)</code></p>
+<h3 id="toc_17">HolidayCalendars</h3>
 
-<p>Number of days between the two dates, divided by the number of days in a year, according 
-to the specified daycount convention</p>
+<p>Holiday Calendars are specified using a heirarchy of types. Typically an abstract type is present for a country, and composite types for each specific market within the country. All the composite types can be created via a zero argument constructor</p>
 
-<p><code>yearfraction(dc::ISMAAActualActual, date_start, date_end, reference_date_start, reference_date_end)</code></p>
-
-<p>Year fraction for the ISMAA Actual/Actual daycount convention, which requires as input the reference
-start and end dates, typically the coupon dates.  </p>
-
-<h3 id="toc_13">HolidayCalendars</h3>
-
-<p>Holiday Calendars are specified using a heirarchy of types. Typically an abstract type is present for
-a country, and composite types for each specific market within the country. All the composite types can
-be created via a zero argument constructor</p>
-
-<p>The following types are present 
-currently. More types will be added as further holiday calendars are implemented</p>
+<p>The following types are present currently. More types will be added as further holiday calendars are implemented</p>
 <div class="highlight"><pre><code class="text">BusinessCalendar
 +- OrthodoxCalendar
 +- WesternCalendar
@@ -118,15 +109,13 @@ currently. More types will be added as further holiday calendars are implemented
 </code></pre>
 </div>
 
-<p><code>isWorkingDay(c::BusinessCalendar, date)</code></p>
-
-<p>Returns false if the input date is a holiday in the specified calendar, true otherwise</p>
+<p><code>isWorkingDay(c::BusinessCalendar, date)</code><br>
+Returns false if the input date is a holiday in the specified calendar, true otherwise</p>
 
 <p><code>businessDaysBetween(c::BusinessCalendar, from, to, includeFirst::Bool,  includeLast::Bool)</code></p>
 
-<p><code>businessDaysBetween(c::BusinessCalendar, from, to)</code></p>
-
-<p>The number of business days between two days</p>
+<p><code>businessDaysBetween(c::BusinessCalendar, from, to)</code><br>
+The number of business days between two days</p>
 
       </section>
       <footer>

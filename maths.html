@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Ito.jl by aviks</title>
+    <title>Ito.jl -- Financial Computing in Julia</title>
 
     <link rel="stylesheet" href="res/styles.css">
     <link rel="stylesheet" href="res/pygment_trac.css">
@@ -48,6 +48,7 @@
            <li><a href="maths.html">Maths</a></li>
            <li><a href="time.html">Time</a></li>
            <li><a href="statistics.html">Statistics</a></li>
+           <li><a href="term_structure.html">Term Structure</a></li>
         </ul>
       </div>
       </header>
@@ -60,17 +61,15 @@
 
 <p><code>module Ito.Integration</code> </p>
 
-<p><code>integrate(f, method, a, b)</code></p>
-
-<p>$$ \int_{a}^{b} f(x) dx $$</p>
+<p><code>integrate(f, method, a, b)</code><br>
+$$ \int_{a}^{b} f(x) dx $$</p>
 
 <p>The only integration method currently implemented is <code>AdaptiveSimpsonsIntegration</code></p>
 
 <p><code>AdaptiveSimpsonsIntegration(accuracy, maximum_iterations)</code></p>
 
-<p><code>AdaptiveSimpsonsIntegration()</code></p>
-
-<p>Default accuracy of $10^{-9}$ and maximum $50$ iterations</p>
+<p><code>AdaptiveSimpsonsIntegration()</code><br>
+Default accuracy of $10^{-9}$ and default maximum of $50$ iterations</p>
 
 <p>Examples:</p>
 <div class="highlight"><pre><code class="julia"><span class="n">integrate</span><span class="p">(</span><span class="n">cos</span><span class="p">,</span> <span class="n">AdaptiveSimpsonsIntegration</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span><span class="nb">pi</span><span class="p">)</span>  <span class="c"># 2</span>
