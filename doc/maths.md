@@ -11,7 +11,6 @@ Some of these might be moved into their own packages eventaully
 `module Ito.Integration` 
 
 `integrate(f, method, a, b)`
-
 $$ \int_{a}^{b} f(x) dx $$
 	
 The only integration method currently implemented is `AdaptiveSimpsonsIntegration`
@@ -19,8 +18,7 @@ The only integration method currently implemented is `AdaptiveSimpsonsIntegratio
 `AdaptiveSimpsonsIntegration(accuracy, maximum_iterations)`
 
 `AdaptiveSimpsonsIntegration()`
-
-Default accuracy of $10^{-9}$ and maximum $50$ iterations
+Default accuracy of $10^{-9}$ and default maximum of $50$ iterations
 
 Examples:
 

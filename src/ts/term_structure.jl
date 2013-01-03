@@ -11,6 +11,8 @@ export YieldTermStructure, VolatilityTermStructure, FlatYieldTermStructure,
 
 compound_factor(r::Real, compounding::Symbol, freq::Symbol,  t::Real) = compound_factor(r, compounding, eval(freq), t)
 compound_factor(r::Real, compounding::Symbol,  t::Real) = compound_factor(r, compounding, NoFrequency, t)
+compound_factor(r::Real, compounding::Symbol, dc::DayCount, dates::CalendarTime...) = compound_factor(r, compounding, NoFrequency, dates...)
+compound_factor(r::Real, compounding::Symbol, freq::Symbol, dc::DayCount, dates::CalendarTime...) = compound_factor(r, compounding, eval(freq), dates...)
 compound_factor(r::Real, compounding::Symbol, freq::Integer, dc::DayCount, dates::CalendarTime...) = compound_factor(r,  compounding, freq, yearfraction(dc, dates...))
 
 function compound_factor(r::Real, compounding::Symbol, freq::Integer, t::Real ) 
@@ -36,6 +38,7 @@ end
 discount_factor(x...) = 1/compound_factor(x...)
 
 implied_rate(c::Real, compounding::Symbol, freq::Symbol,  t::Real) = implied_rate(c,compounding, eval(freq), t)
+implied_rate(c::Real, compounding::Symbol, freq::Symbol, dc::DayCount, dates::CalendarTime...) = implied_rate(c,compounding, eval(freq), dates...)
 implied_rate(c::Real, compounding::Symbol, freq::Integer, dc::DayCount, dates::CalendarTime...) = implied_rate(c, compounding, freq, yearfraction(dc, dates...))
 
 function implied_rate(c::Real, compounding::Symbol, freq::Integer, t::Real)
