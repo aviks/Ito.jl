@@ -17,7 +17,7 @@ We are just getting started. However, it is hoped that even in this early state,
 ```julia
 require("pkg")
 Pkg.init() #Once per Julia install
-Pkg.add("JSON")
+Pkg.add("Ito")
 ```
 
 ## Current Status
@@ -27,14 +27,13 @@ Pkg.add("JSON")
 * Comprehensive financial statistics are implemented
 * Numerical integration algorithm using adaptive Simpsons rule implemented
 * Fundamental interest rate calculations are implemented (discount factor etc)
+* A framework for term structures is available. Only concrete implementation is a flat term structure. 
 
 ##About Julia
 
 Julia is a fast, dynamic language particularly suited for quantitative programs. It includes fast primitives for many required operations (e.g. fast matrix operations, FFTs) and a growing ecosystem for additional quantitative algorithms(e.g. [Distributions](https://github.com/JuliaStats/Distributions.jl) and  [Optimsation](https://github.com/johnmyleswhite/Optim.jl) )
 
-The performance of the Julia interpreter (based on LLVM) means that almost all Julia primitives are implemented in Julia itself. For our purposes, this means that we get the power, expressiveness and productivity of writing quantitative techniques in a high level language, while still getting the speed of a low level implementation. This fact has a few important side effects
+Leveraging Julia allows us to write fast, numerically stable kernels in a high level language. This enables much easier extensions and modifications. It also greatly benefits the use of the library as pedagogic aide. 
 
-* Its much easier to understand existing codebases, and therefore contribute
-* Julia is therefore highly suited for all pedagogic requirements 
-* Kernels and objective functions can be written in Julia itself, which can then be passed to optimisation routines in Julia. This makes for a much smoother programming experience, while still maintaining performance. 
-* Eventually, we will be able to leverage Julia's distributed computing capabilities to write efficient distributed algorithms. 
+Eventually, we also hope to leveage Julia's distributed computing capabilites for efficient distributed algorithms. 
+
