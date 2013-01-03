@@ -1,4 +1,4 @@
-#Ito, a open source toolkit for financial computing in Julia
+#Ito, an open source toolkit for financial computing in Julia
 
 Ito is a collection of Julia modules containing algorithms for efficient quantitative finance. 
 
@@ -10,5 +10,5 @@ Pkg.init() #Once per Julia install
 Pkg.add("Ito")
 ```
 
-More documentation at http://aviks.github.com/Ito.jl/
+Documentation is available at http://aviks.github.com/Ito.jl/
 
