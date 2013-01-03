@@ -7,7 +7,7 @@ Ito is a collection of Julia modules containing algorithms for efficient quantit
 ```julia
 require("pkg")
 Pkg.init() #Once per Julia install
-Pkg.add("JSON")
+Pkg.add("Ito")
 ```
 
 More documentation at http://aviks.github.com/Ito.jl/
