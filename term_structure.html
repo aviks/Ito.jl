@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ito.jl -- Financial Computing in Julia</title>
+
+    <link rel="stylesheet" href="res/styles.css">
+    <link rel="stylesheet" href="res/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <style TYPE="text/css">
+      code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
+    </style>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          tex2jax: {
+              inlineMath: [['$','$'], ['\\(','\\)']],
+              skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'header'] // removed 'code' entry
+          }
+      });
+      MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i = 0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+    </script>  
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ito.jl</h1>
+        <p>A toolkit for financial computing</p>
+
+        <ul>
+          <li><a href="https://github.com/aviks/Ito.jl/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/aviks/Ito.jl/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/aviks/Ito.jl">View On <strong>GitHub</strong></a></li>
+        </ul>
+        <div class="menu">
+        <ul >
+           <li><a href="index.html">Home</a></li>
+           <li><a href="maths.html">Maths</a></li>
+           <li><a href="time.html">Time</a></li>
+           <li><a href="statistics.html">Statistics</a></li>
+           <li><a href="term_structure.html">Term Structure</a></li>
+        </ul>
+      </div>
+      </header>
+      <section>
+	<h1 id="toc_11">Term Structures</h1>
+
+<h3 id="toc_12">Time value of money</h3>
+
+<p><code>compound_factor(rate, compounding, freq,  time)</code><br>
+<code>compound_factor(rate, compounding, freq,  daycount_convention, dates...)</code><br>
+The compoounding factor for the specified annual rate, with the given compounding type and frequency. Either a time is specified as a fraction of year, or a daycount convention and a series of days. Usually, two dates are specified (the start and end dates). However, for the <code>ISMAActualActual</code> daycount convention, four dates are required (the start and end dates, and the reference start and end dates). The frequency may be omitted if compounding is <code>Simple</code> or <code>Continuous</code>; it is not used in those cases. </p>
+
+<p>Compounding type is specified as a symbol, and can be one of </p>
+<div class="highlight"><pre><code class="julia"><span class="p">:</span><span class="n">Simple</span>
+<span class="p">:</span><span class="n">Compounded</span>
+<span class="p">:</span><span class="n">Continuous</span>
+<span class="p">:</span><span class="n">SimpleThenCompounded</span>
+</code></pre>
+</div>
+
+<p>Frequency can be specified either as a symbol, or as an integer variable that denotes the divisor of the year. The following variables are allowed:</p>
+<div class="highlight"><pre><code class="julia"><span class="n">NoFrequency</span>         <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">Once</span>                <span class="o">=</span> <span class="mi">0</span> 
+<span class="n">Annual</span>              <span class="o">=</span> <span class="mi">1</span> 
+<span class="n">Semiannual</span>          <span class="o">=</span> <span class="mi">2</span> 
+<span class="n">EveryFourthMonth</span>    <span class="o">=</span> <span class="mi">3</span> 
+<span class="n">Quarterly</span>           <span class="o">=</span> <span class="mi">4</span> 
+<span class="n">Bimonthly</span>           <span class="o">=</span> <span class="mi">6</span> 
+<span class="n">Monthly</span>             <span class="o">=</span> <span class="mi">12</span>
+<span class="n">EveryFourthWeek</span>     <span class="o">=</span> <span class="mi">13</span>
+<span class="n">Biweekly</span>            <span class="o">=</span> <span class="mi">26</span>
+<span class="n">Weekly</span>              <span class="o">=</span> <span class="mi">52</span>
+<span class="n">Daily</span>               <span class="o">=</span> <span class="mi">365</span>
+<span class="n">OtherFrequency</span>      <span class="o">=</span> <span class="mi">999</span>
+</code></pre>
+</div>
+
+<p>discount_factor(x...)<br>
+The discount factor for a specified rate, with the given compounding type and frequency. The reciprocal of the compound factor. The parameters to the discount factor function are exactly the same as the <code>compound_factor</code> function. </p>
+
+<p><code>implied_rate(comp, compounding, freq,  time)</code><br>
+<code>implied_rate(comp, compounding, freq,  daycount_convention, dates...)</code><br>
+The implied interest rate given a particular compound factor</p>
+
+<p>Examples:</p>
+<div class="highlight"><pre><code class="julia"><span class="n">compound_factor</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="p">:</span><span class="n">Compounded</span><span class="p">,</span> <span class="p">:</span><span class="n">Annual</span><span class="p">,</span> <span class="n">Actual360</span><span class="p">(),</span> <span class="n">today</span><span class="p">(),</span> <span class="n">today</span><span class="p">()</span><span class="o">+</span><span class="n">days</span><span class="p">(</span><span class="mi">360</span><span class="p">))</span> <span class="c">#1.7</span>
+<span class="n">compound_factor</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="p">:</span><span class="n">Compounded</span><span class="p">,</span> <span class="p">:</span><span class="n">Semiannual</span><span class="p">,</span> <span class="n">Actual360</span><span class="p">(),</span> <span class="n">today</span><span class="p">(),</span> <span class="n">today</span><span class="p">()</span><span class="o">+</span><span class="n">days</span><span class="p">(</span><span class="mi">360</span><span class="p">))</span> <span class="c">#1.035^2</span>
+<span class="n">discount_factor</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="p">:</span><span class="n">Compounded</span><span class="p">,</span> <span class="p">:</span><span class="n">Annual</span><span class="p">,</span> <span class="n">Actual360</span><span class="p">(),</span> <span class="n">today</span><span class="p">(),</span> <span class="n">today</span><span class="p">()</span><span class="o">+</span><span class="n">days</span><span class="p">(</span><span class="mi">360</span><span class="p">))</span> <span class="c">#1/1.7</span>
+</code></pre>
+</div>
+
+<h3 id="toc_13">Term Structure</h3>
+
+<p>Any interest rate term structure implementation must extend the abstract <code>YieldTermStructure</code>. The term structure type must store its day count conventions as an attribute <code>dc</code>. It must provide an implementation of the <code>discount(ts::YieldTermStructure, time::Real)</code> function, where, as usual, time is specified as fractions or multiples of a year . </p>
+
+<p>A term structure must also specify its reference date, either via a <code>reference_date</code> attribute on the type, or by implementing a <code>reference_date(ts::YieldTermStructure)</code> method. All other functions of a <code>YieldTermStructure</code> are defined via the abstract type.</p>
+
+<p><code>discount(ts::YieldTermStructure, d::CalendarTime)</code><br>
+The discount factor from the reference date to the input date, counted according to the daycount convention of the term structure</p>
+
+<p><code>forward_rate(ts::YieldTermStructure, compounding, freq, date_start, date_end)</code><br>
+<code>forward_rate(ts::YieldTermStructure, compounding, freq, time_start, time_end)</code><br>
+The forward rate between two specified dates or times. When the input is a date, the time calculated as year fractions from the reference date. If the date is the same as the reference date, the instantaneous forward rate is returned. </p>
+
+<p><code>zero_rate(ts::YieldTermStructure, compounding, freq, date)</code><br>
+<code>zero_rate(ts::YieldTermStructure, compounding, freq, time)</code><br>
+The implied zero yield rate at the specified date or time. When the input is a date, the time calculated as year fractions from the reference date. </p>
+
+<p><code>par_rate(ts::YieldTermStructure, compounding, freq, date_array)</code><br>
+<code>par_rate(ts::YieldTermStructure, compounding, freq, time_array)</code><br>
+Implied par rate for a sequence of payments at the specified dates or times. The first date is the valuation date, and the other dates are payment dates.</p>
+
+<h3 id="toc_14">Flat Term Structure</h3>
+
+<p>The <code>FlatYieldTermStructure &lt;: YieldTermStructure</code> is a concrete type defines a term structure with a constant rate. </p>
+
+<p><code>FlatYieldTermStructure(dc::DayCount, rate::Real)</code><br>
+Create a FlatYieldTermStructure with the specified day count convention and annualised interest rate. </p>
+
+      </section>
+      <footer>
+        <p></p>
+        <p><small>This project is maintained by <a href="http://www.sengupta.net/musings/">Avik Sengupta</a>. <br /> Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="res/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-37085988-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
