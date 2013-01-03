@@ -66,7 +66,7 @@
 <h2 id="toc_2">Installation</h2>
 <div class="highlight"><pre><code class="julia"><span class="n">require</span><span class="p">(</span><span class="s">&quot;pkg&quot;</span><span class="p">)</span>
 <span class="n">Pkg</span><span class="o">.</span><span class="n">init</span><span class="p">()</span> <span class="c">#Once per Julia install</span>
-<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;JSON&quot;</span><span class="p">)</span>
+<span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&quot;Ito&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -78,20 +78,16 @@
 <li>Comprehensive financial statistics are implemented</li>
 <li>Numerical integration algorithm using adaptive Simpsons rule implemented</li>
 <li>Fundamental interest rate calculations are implemented (discount factor etc)</li>
+<li>A framework for term structures is available. Only concrete implementation is a flat term structure. </li>
 </ul>
 
 <h2 id="toc_4">About Julia</h2>
 
 <p>Julia is a fast, dynamic language particularly suited for quantitative programs. It includes fast primitives for many required operations (e.g. fast matrix operations, FFTs) and a growing ecosystem for additional quantitative algorithms(e.g. <a href="https://github.com/JuliaStats/Distributions.jl">Distributions</a> and  <a href="https://github.com/johnmyleswhite/Optim.jl">Optimsation</a> )</p>
 
-<p>The performance of the Julia interpreter (based on LLVM) means that almost all Julia primitives are implemented in Julia itself. For our purposes, this means that we get the power, expressiveness and productivity of writing quantitative techniques in a high level language, while still getting the speed of a low level implementation. This fact has a few important side effects</p>
+<p>Leveraging Julia allows us to write fast, numerically stable kernels in a high level language. This enables much easier extensions and modifications. It also greatly benefits the use of the library as pedagogic aide. </p>
 
-<ul>
-<li>Its much easier to understand existing codebases, and therefore contribute</li>
-<li>Julia is therefore highly suited for all pedagogic requirements </li>
-<li>Kernels and objective functions can be written in Julia itself, which can then be passed to optimisation routines in Julia. This makes for a much smoother programming experience, while still maintaining performance. </li>
-<li>Eventually, we will be able to leverage Julia&#39;s distributed computing capabilities to write efficient distributed algorithms. </li>
-</ul>
+<p>Eventually, we also hope to leveage Julia&#39;s distributed computing capabilites for efficient distributed algorithms. </p>
 
       </section>
       <footer>
