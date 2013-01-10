@@ -49,15 +49,16 @@
            <li><a href="time.html">Time</a></li>
            <li><a href="statistics.html">Statistics</a></li>
            <li><a href="term_structure.html">Term Structure</a></li>
+           <li><a href="process.html">Stochastic Processes</a></li>
         </ul>
       </div>
       </header>
       <section>
-	<h1 id="toc_7">Functions for financial Statistics</h1>
+	<h1 id="toc_11">Functions for financial Statistics</h1>
 
 <p><code>module Ito.Statistics</code></p>
 
-<h3 id="toc_8">Weighted moments</h3>
+<h3 id="toc_12">Weighted moments</h3>
 
 <p>The weighted, second, third and fourth moments. All these measures are corrected for sample bias.</p>
 
@@ -74,7 +75,7 @@
 <p><code>error_estimate(v::AbstractVector, w::AbstractVector)</code><br>
 $\sigma / \sqrt N $</p>
 
-<h3 id="toc_9">Risk Statistics</h3>
+<h3 id="toc_13">Risk Statistics</h3>
 
 <p><code>semi_variance(v::AbstractVector, w::AbstractVector)</code><br>
 Returns the variance of observations below the mean. <br>
@@ -124,7 +125,7 @@ potential upside (the reciprocal of VAR) at a given percentile $ p \in [0.9,1) $
 <p><code>value_at_risk(v::AbstractVector, w::AbstractVector, p::Real)</code><br>
 Value at Risk at a given percentile $ p \in [0.9,1) $  </p>
 
-<h3 id="toc_10">Guassian Risk Statistics</h3>
+<h3 id="toc_14">Guassian Risk Statistics</h3>
 
 <p><code>gaussian_downside_variance(v::AbstractVector, w::AbstractVector)</code><br>
 Gaussian assumption downside variance<br>

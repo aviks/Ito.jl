@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ito.jl -- Financial Computing in Julia</title>
+
+    <link rel="stylesheet" href="res/styles.css">
+    <link rel="stylesheet" href="res/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <style TYPE="text/css">
+      code.has-jax {font: inherit; font-size: 100%; background: inherit; border: inherit;}
+    </style>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+          tex2jax: {
+              inlineMath: [['$','$'], ['\\(','\\)']],
+              skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'header'] // removed 'code' entry
+          }
+      });
+      MathJax.Hub.Queue(function() {
+          var all = MathJax.Hub.getAllJax(), i;
+          for(i = 0; i < all.length; i += 1) {
+              all[i].SourceElement().parentNode.className += ' has-jax';
+          }
+      });
+    </script>  
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ito.jl</h1>
+        <p>A toolkit for financial computing</p>
+
+        <ul>
+          <li><a href="https://github.com/aviks/Ito.jl/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/aviks/Ito.jl/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/aviks/Ito.jl">View On <strong>GitHub</strong></a></li>
+        </ul>
+        <div class="menu">
+        <ul >
+           <li><a href="index.html">Home</a></li>
+           <li><a href="maths.html">Maths</a></li>
+           <li><a href="time.html">Time</a></li>
+           <li><a href="statistics.html">Statistics</a></li>
+           <li><a href="term_structure.html">Term Structure</a></li>
+           <li><a href="process.html">Stochastic Processes</a></li>
+        </ul>
+      </div>
+      </header>
+      <section>
+	<h1 id="toc_7">Stochastic Processes</h1>
+
+<p>We model stocastic processes via a sub type of the abstract <code>StochasticProcess</code> type. All stochastic processes are governed by a generic stochastic differential equation of the type:<br>
+$d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t$</p>
+
+<p><code>evolve(sp::StochasticProcess, t0, x0, dt, dw)</code><br>
+Evolve a stochastic process for a given time step and a specified Wiener step<br>
+$E(\mathrm{x}_0,t_0,\Delta t) + S(\mathrm{x}_0,t_0,\Delta t) \cdot \Delta \mathrm{w}$</p>
+
+<p><code>apply_change(sp::StochasticProcess, x, dx)</code><br>
+Apply a step change. The default implementation is an addition, but this can be overridden for sub-types.<br>
+$\mathrm{x} + \Delta \mathrm{x}$</p>
+
+<p><code>drift(sp::StochasticProcess, t, x)</code><br>
+The drift portion of a stochastic process<br>
+$\mu(t, \mathrm{x}_t)$</p>
+
+<p><code>diffusion(sp::StochasticProcess, t, x)</code><br>
+The diffusion portion of stochastic process<br>
+$\sigma(t, \mathrm{x}_t)$</p>
+
+<h3 id="toc_8">Discretisation</h3>
+
+<p>An implementation of Euler Discretisation</p>
+
+<p><code>drift_discretize(sp::StochasticProcess, t0::Real, x0::AbstractVector, dt::Real)</code><br>
+Discretize the drift of a stochastic process<br>
+$\mu(t_0, \mathbf{x}_0) \Delta t$</p>
+
+<p><code>diffusion_discretize(sp::StochasticProcess, t0::Real, x0::AbstractVector, dt::Real)</code><br>
+Discretize the diffusion of a stochastic process<br>
+$\sigma(t_0, \mathbf{x}_0) \sqrt{\Delta t}$</p>
+
+<p><code>covariance_discretize(sp::StochasticProcess, t0, x0, dt)</code><br>
+$\sigma(t_0, \mathbf{x}_0)^2 \Delta t$</p>
+
+<h3 id="toc_9">Geometric Brownian Motion</h3>
+
+<p><code>GeometricBrownianMotion(initial_value, mu, sigma)</code><br>
+Model a Geometric Brownian Motion, governed by the stochastic differential equation: <br>
+$dS(t, S) = \mu S dt + \sigma S dW_t$</p>
+
+<p>Example to simulate a series of prices from a Geometric Brownian Motion</p>
+<div class="highlight"><pre><code class="julia"><span class="n">using</span> <span class="n">Distributions</span>
+<span class="n">bm</span><span class="o">=</span><span class="n">Ito</span><span class="o">.</span><span class="n">Process</span><span class="o">.</span><span class="n">GeometricBrownianMotion</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">t</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">x</span><span class="o">=</span><span class="n">bm</span><span class="o">.</span><span class="n">start</span><span class="p">;</span> <span class="n">dt</span><span class="o">=.</span><span class="mi">001</span>
+<span class="n">W</span><span class="o">=</span><span class="n">Normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span><span class="mi">100000</span>
+    <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">Ito</span><span class="o">.</span><span class="n">Process</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">bm</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">rand</span><span class="p">(</span><span class="n">W</span><span class="p">))</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<h3 id="toc_10">Generic Black Scholes Process</h3>
+
+<p><code>GenericBlackScholesProcess(start, yield_term_structure, dividend_term_structure, volatility_term_structure)</code><br>
+A generalized Black-Scholes process, governed by the stochastic differential equation:<br>
+$dS(t, S) = (r(t) - q(t) - \frac {\sigma(t, S)^2}{2}) dt + \sigma dW_t$</p>
+
+      </section>
+      <footer>
+        <p></p>
+        <p><small>This project is maintained by <a href="http://www.sengupta.net/musings/">Avik Sengupta</a>. <br /> Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="res/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-37085988-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
