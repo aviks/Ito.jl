@@ -76,10 +76,10 @@ discount(ts::YieldTermStructure, t::Real) = error("Must be implemented by concre
 reference_date(ts::YieldTermStructure) = ts.reference_date
 
 forward_rate(ts::YieldTermStructure, compounding::Symbol, freq::Integer, d1::CalendarTime, d2::CalendarTime) = forward_rate(ts, compounding, freq, d1, d2) 
-function forward_rate(ts::YieldTermStructure, compounding::Symbol, freq::Integer, d1::CalendarTime, d2::CalendarTime::Bool ) 
+function forward_rate(ts::YieldTermStructure, compounding::Symbol, freq::Integer, d1::CalendarTime, d2::CalendarTime ) 
 	if d1==d2
 		t1 = yearfraction(reference_date(ts), d1)
-		t2 = t1+.001
+		t2 = t1+.0001
 		c=discount(ts, t1) / discount(ts, t2)
 		return implied_rate(c, compound, freq, delta)
 	elseif d1<d2
@@ -87,6 +87,15 @@ function forward_rate(ts::YieldTermStructure, compounding::Symbol, freq::Integer
 	else
 		error("Forward start date must be before forward end dates")
 	end
+end
+
+function forward_rate(ts::YieldTermStructure, compounding::Symbol, freq::Integer, t1::Real, t2::Real ) 
+	if (t2==t1)
+		t2=t1+.0001
+	end
+
+	compound = discount(ts, t1) / discount(ts, t2)
+	return implied_rate(discount(ts, t1) / discount(ts, t2), ts.dc, t1, t2)
 end
 
 zero_rate(ts::YieldTermStructure, compounding::Symbol, freq::Integer, d1::CalendarTime) = zero_rate(ts, compounding, freq, yearfraction(ts.dc, reference_date(ts), d1))
