@@ -46,19 +46,22 @@ $\sigma(t_0, \mathbf{x}_0)^2 \Delta t$
 Model a Geometric Brownian Motion, governed by the stochastic differential equation: 
 $dS(t, S) = \mu S dt + \sigma S dW_t$
 
-Example to simulate a series of prices from a Geometric Brownian Motion
+####Example 
+To simulate a series of prices from a Geometric Brownian Motion:
 
 ```julia
 using Distributions
 bm=Ito.Process.GeometricBrownianMotion(100, .1, .2)
 t=0; x=bm.start; dt=.001
-W=Normal(0, dt)
-for i=1:100000
+W=Normal(0, 1)
+for i=1:1000
 	t=t+dt
 	x=Ito.Process.evolve(bm, t, x, dt, rand(W))
 end
 
 ```
+This will produce a price process looking like this (Charts by [Gadfly](http://dcjones.github.com/Gadfly.jl/doc/))
+![Prices] (res/gbm.svg)
 
 
 ###Generic Black Scholes Process
