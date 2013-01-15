@@ -31,6 +31,6 @@ cd("_site") do
 
 	 run(`git update-ref refs/heads/gh-pages $csha `)
 
-	 #run(`git push origin gh-pages `)
+	 run(`git push origin gh-pages `)
 
 end
