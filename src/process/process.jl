@@ -55,14 +55,4 @@ function drift(sp::GenericBlackScholesProcess, t, x)
     return r - d - 0.5 * sigma * sigma
 end 
 
-
-
-
-
-
-
-
-
-
-
 end #module
