@@ -50,13 +50,14 @@
            <li><a href="statistics.html">Statistics</a></li>
            <li><a href="term_structure.html">Term Structure</a></li>
            <li><a href="process.html">Stochastic Processes</a></li>
+           <li><a href="instruments.html">Instruments and Payoffs</a></li>
         </ul>
       </div>
       </header>
       <section>
-	<h1 id="toc_16">Term Structures</h1>
+	<h1 id="toc_17">Term Structures</h1>
 
-<h3 id="toc_17">Time value of money</h3>
+<h3 id="toc_18">Time value of money</h3>
 
 <p><code>compound_factor(rate, compounding, freq,  time)</code><br>
 <code>compound_factor(rate, compounding, freq,  daycount_convention, dates...)</code><br>
@@ -101,7 +102,7 @@ The implied interest rate given a particular compound factor</p>
 </code></pre>
 </div>
 
-<h3 id="toc_18">Term Structure</h3>
+<h3 id="toc_19">Term Structure</h3>
 
 <p>Any interest rate term structure implementation must extend the abstract <code>YieldTermStructure</code>. The term structure type must store its day count conventions as an attribute <code>dc</code>. It must provide an implementation of the <code>discount(ts::YieldTermStructure, time::Real)</code> function, where, as usual, time is specified as fractions or multiples of a year . </p>
 
@@ -122,7 +123,7 @@ The implied zero yield rate at the specified date or time. When the input is a d
 <code>par_rate(ts::YieldTermStructure, compounding, freq, time_array)</code><br>
 Implied par rate for a sequence of payments at the specified dates or times. The first date is the valuation date, and the other dates are payment dates.</p>
 
-<h3 id="toc_19">Flat Term Structure</h3>
+<h3 id="toc_20">Flat Term Structure</h3>
 
 <p>The <code>FlatYieldTermStructure &lt;: YieldTermStructure</code> is a concrete type defines a term structure with a constant rate. </p>
 

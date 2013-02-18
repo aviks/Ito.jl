@@ -50,11 +50,12 @@
            <li><a href="statistics.html">Statistics</a></li>
            <li><a href="term_structure.html">Term Structure</a></li>
            <li><a href="process.html">Stochastic Processes</a></li>
+           <li><a href="instruments.html">Instruments and Payoffs</a></li>
         </ul>
       </div>
       </header>
       <section>
-	<h1 id="toc_7">Stochastic Processes</h1>
+	<h1 id="toc_8">Stochastic Processes</h1>
 
 <p>We model stocastic processes via a sub type of the abstract <code>StochasticProcess</code> type. All stochastic processes are governed by a generic stochastic differential equation of the type:<br>
 $d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t$</p>
@@ -75,7 +76,7 @@ $\mu(t, \mathrm{x}_t)$</p>
 The diffusion portion of stochastic process<br>
 $\sigma(t, \mathrm{x}_t)$</p>
 
-<h3 id="toc_8">Discretisation</h3>
+<h3 id="toc_9">Discretisation</h3>
 
 <p>An implementation of Euler Discretisation</p>
 
@@ -90,13 +91,13 @@ $\sigma(t_0, \mathbf{x}_0) \sqrt{\Delta t}$</p>
 <p><code>covariance_discretize(sp::StochasticProcess, t0, x0, dt)</code><br>
 $\sigma(t_0, \mathbf{x}_0)^2 \Delta t$</p>
 
-<h3 id="toc_9">Geometric Brownian Motion</h3>
+<h3 id="toc_10">Geometric Brownian Motion</h3>
 
 <p><code>GeometricBrownianMotion(initial_value, mu, sigma)</code><br>
 Model a Geometric Brownian Motion, governed by the stochastic differential equation: <br>
 $dS(t, S) = \mu S dt + \sigma S dW_t$</p>
 
-<h4 id="toc_10">Example</h4>
+<h4 id="toc_11">Example</h4>
 
 <p>To simulate a series of prices from a Geometric Brownian Motion:</p>
 <div class="highlight"><pre><code class="julia"><span class="n">using</span> <span class="n">Distributions</span>
@@ -113,7 +114,7 @@ $dS(t, S) = \mu S dt + \sigma S dW_t$</p>
 <p>This will produce a price process looking like this (Charts by <a href="http://dcjones.github.com/Gadfly.jl/doc/">Gadfly</a>)<br>
 <img src="res/gbm.svg" alt="Prices"></p>
 
-<h3 id="toc_11">Generic Black Scholes Process</h3>
+<h3 id="toc_12">Generic Black Scholes Process</h3>
 
 <p><code>GenericBlackScholesProcess(start, yield_term_structure, dividend_term_structure, volatility_term_structure)</code><br>
 A generalized Black-Scholes process, governed by the stochastic differential equation:<br>

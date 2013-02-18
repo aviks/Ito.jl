@@ -55,69 +55,19 @@
       </div>
       </header>
       <section>
-	<h1 id="toc_21">Date and Time</h1>
+	<h1 id="toc_5">Payoff and Instruments</h1>
 
-<p><code>module Ito.Time</code></p>
+<p><code>VanillaPayoff(type::Symbol, strike)</code><br>
+A optional payout. <code>type</code> can be <code>:call</code> or <code>:put</code></p>
 
-<h3 id="toc_22">Day count conventions</h3>
+<p><code>ForwardPayoff(type::Symbol, strike)</code><br>
+A guaranteed forward payoff. <code>type</code> can be <code>:long</code> or <code>:short</code></p>
 
-<p>Day count conventions are specified via the following types:</p>
-<div class="highlight"><pre><code class="text">DayCount
-+- Actual360
-+- Business252
-+- Actual365
-+- Thirty360
-   +- BondThirty360
-   +- EuroBondThirty360
-   +- ItalianThirty360
-+ ActualActual 
-   +- ISMAActualActual
-   +- ISDAActualActual
-   +- AFBActualActual
-</code></pre>
-</div>
+<p><code>VanillaOption(payoff, excercise)</code><br>
+A vanilla call or put option, paying off at the excercise date</p>
 
-<p><code>Business252(BusinessCalendar bc)</code><br>
-Create an instance <code>Business252</code> day count convention, with a <code>BusinessCalendar</code> as an input. All other day count conventions have a zero argument constructor. </p>
-
-<p><code>daycount(dc::DayCount, date_start, date_end)</code><br>
-Number of days between the two dates, counted according the specified daycount convention</p>
-
-<p><code>yearfraction(dc::Daycount, date_start, date_end)</code><br>
-Number of days between the two dates, divided by the number of days in a year, according to the specified daycount convention</p>
-
-<p><code>yearfraction(dc::ISMAAActualActual, date_start, date_end, reference_date_start, reference_date_end)</code><br>
-Year fraction for the ISMAA Actual/Actual daycount convention, which requires as input the reference start and end dates, typically the coupon dates.  </p>
-
-<h3 id="toc_23">HolidayCalendars</h3>
-
-<p>Holiday Calendars are specified using a heirarchy of types. Typically an abstract type is present for a country, and composite types for each specific market within the country. All the composite types can be created via a zero argument constructor</p>
-
-<p>The following types are present currently. More types will be added as further holiday calendars are implemented</p>
-<div class="highlight"><pre><code class="text">BusinessCalendar
-+- OrthodoxCalendar
-+- WesternCalendar
-   +- UKCalendar
-      +- UKSettlementCalendar
-      +- UKLMECalendar
-      +- UKLSECalendar
-   +- USCalendar
-      +- USSettlementCalendar
-      +- USGovernmentBondCalendar
-      +- USNERCCalendar
-      +- USNYSECalendar
-   +- IndiaCalendar
-      +IndiaNSECalendar
-</code></pre>
-</div>
-
-<p><code>isWorkingDay(c::BusinessCalendar, date)</code><br>
-Returns false if the input date is a holiday in the specified calendar, true otherwise</p>
-
-<p><code>businessDaysBetween(c::BusinessCalendar, from, to, includeFirst::Bool,  includeLast::Bool)</code></p>
-
-<p><code>businessDaysBetween(c::BusinessCalendar, from, to)</code><br>
-The number of business days between two days</p>
+<p><code>AmericanOption(payoff, excercise)</code><br>
+An American call or put option, paying off at any time untill the excercise date</p>
 
       </section>
       <footer>
