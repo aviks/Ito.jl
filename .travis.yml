@@ -17,4 +17,4 @@ script:
     - julia -e 'Pkg.init(); Pkg.add("Distributions"); Pkg.add("Calendar")'
     - mkdir -p ~/.julia/Ito
     - cp -R ./* ~/.julia/Ito/
-    - julia ~/.julia/JSON/test/Ito.jl
+    - julia ~/.julia/Ito/test/Ito.jl
