@@ -14,7 +14,7 @@ before_install:
     - git config --global user.name "Travis User"
     - git config --global user.email "travis@example.net"
 script:
-    - julia -e 'Pkg.init(); Pkg.add("Distributions"); Pkg.add("Calendar")'
+    - julia -e 'versioninfo(); Pkg.init(); Pkg.add("Distributions"); Pkg.add("Calendar")'
     - mkdir -p ~/.julia/Ito
     - cp -R ./* ~/.julia/Ito/
     - julia ~/.julia/Ito/test/Ito.jl
