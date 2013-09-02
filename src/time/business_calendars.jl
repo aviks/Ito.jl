@@ -113,7 +113,7 @@ function businessDaysBetween(c::BusinessCalendar, from::CalendarTime, to::Calend
   return wd
 end
 
-include(find_in_path("Ito/src/time/calendars/UnitedKingdom"))
-include(find_in_path("Ito/src/time/calendars/UnitedStates"))
-include(find_in_path("Ito/src/time/calendars/India"))
+include("calendars/UnitedKingdom.jl")
+include("calendars/UnitedStates.jl")
+include("calendars/India.jl")
 

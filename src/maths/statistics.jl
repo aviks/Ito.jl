@@ -14,8 +14,7 @@ export mean, var, std, kurtosis, skewness,
 		semi_variance, semi_deviation, percentile, top_percentile, downside_variance, downside_deviation, 
 		shortfall, average_shortfall, expected_shortfall, value_at_risk, regret
 
-mean(v::AbstractVector, w::AbstractVector) = weighted_mean(v,w)
-
+mean(v::AbstractVector, w::AbstractVector) = sum(v.*w)/sum(w)
 function var(v::AbstractVector, w::AbstractVector, m) 
 	n=length(v)
 	@assert (n>1)
@@ -48,7 +47,7 @@ end
 function gaussian_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)
 	@assert percentile > 0 && percentile < 1.0
 	m=mean(v,w)
-	s=std(v,m,true)
+	s=stdm(v,m)
 	quantile(Normal(m,s), percentile)
 end
 
@@ -68,7 +67,7 @@ end
 function gaussian_expected_shortfall(v::AbstractVector, w::AbstractVector, percentile::Real)
 	@assert percentile <1.0 && percentile >= 0.9
 	m=mean(v,w)
-	s=std(v,m,true)
+	s=stdm(v,m)
 	d=Normal(m,s)
 	var = quantile(1-percentile)
 	g=pdf(d, var)
@@ -78,13 +77,13 @@ end
 
 function gaussian_shortfall(v::AbstractVector, w::AbstractVector, target::Real) 
 	m=mean(v,w)
-	s=std(v,m,true)
+	s=stdm(v,m)
 	cdf(Normal(m,s), target)
 end
 
 function gaussian_average_shortfall(v::AbstractVector, w::AbstractVector, target::Real)
 	m=mean(v,w)
-	s=std(v,m,true)
+	s=stdm(v,m)
 	d=Normal(m,s)
 	g=pdf(d,target)
 	gi=cdf(d, target)
@@ -92,7 +91,7 @@ function gaussian_average_shortfall(v::AbstractVector, w::AbstractVector, target
 	(target - m) + s*s*g/gi
 end
 
-error_estimate(v::AbstractVector, w::AbstractVector) = sqrt(var(v,w)/numel(v))
+error_estimate(v::AbstractVector, w::AbstractVector) = sqrt(var(v,w)/length(v))
 
 semi_variance(v::AbstractVector, w::AbstractVector) = regret(v, mean(v,w))
 semi_deviation(v::AbstractVector, w::AbstractVector) = sqrt(semi_variance(v,w))
@@ -102,7 +101,7 @@ downside_deviation(v) = sqrt(downside_variance(v))
 
 #Dembo and Freeman, "The Rules Of Risk", Wiley (2001)
 function regret(v::AbstractVector, w::AbstractVector, target::Real) 
-	n=numel(v)
+	n=length(v)
 	(r,_)=expectation_value(v, w, (x)->(x-target)^2, (x)->(x<target))
 	r*n/(n-1)
 end
@@ -129,7 +128,7 @@ end
 
 function expectation_value(v::AbstractVector, w::AbstractVector, mapfun::Function, filterfun::Function)
 	@assert length(v) == length(w)
-	@assert numel(v) >0
+	@assert length(v) >0
 
 	s=0
 	sw=0
@@ -157,7 +156,7 @@ function percentile(v::AbstractVector, w::AbstractVector, p::Real)
 	@assert wts > 0
 	vs, ord = Base.sortperm(v)
 
-	k=1; l=numel(v)
+	k=1; l=length(v)
 	i = w[ord[k]]
 	target = p*wts
 
@@ -174,7 +173,7 @@ function top_percentile(v::AbstractVector, w::AbstractVector, p::Real)
 	@assert wts > 0
 	vs, ord = Base.sortperm(v)
 
-	l=1; k=numel(v)
+	l=1; k=length(v)
 	i = w[ord[k]]
 	target = p*wts
 
@@ -186,9 +185,9 @@ function top_percentile(v::AbstractVector, w::AbstractVector, p::Real)
 end
 
 function skewness(v::AbstractVector, w::AbstractVector, m, corrected::Bool)
-	n=numel(v)
-	y=expectation_value(v, w, (x)->(x-m)^3, (x)->true)
-	sigma = std(v,false)
+	n=length(v)
+	y, _ =expectation_value(v, w, (x)->(x-m)^3, (x)->true)
+	sigma = std(v)*sqrt((n-1)/n)
 	if corrected
 		@assert n>2
 		(y/(sigma*sigma*sigma)) * (sqrt(n*(n-1))/(n-2))
@@ -198,15 +197,15 @@ function skewness(v::AbstractVector, w::AbstractVector, m, corrected::Bool)
 end
 
 function kurtosis(v::AbstractVector, w::AbstractVector, m, corrected::Bool)
-	n=numel(v)
+	n=length(v)
 	vv=v-m
-	y=expectation_value(v, w, (x)->(x-m)^3, (x)->true)
+	y,_=expectation_value(v, w, (x)->(x-m)^3, (x)->true)
 	if corrected
 		@assert n>3
 		c1=(n/(n-1.0)) * (n/(n-2.0)) * ((n+1.0)/(n-3.0))
 		c2=3.0 * ((n-1.0)/(n-2.0)) * ((n-1.0)/(n-3.0));
 		#(n*(n+1)*k)/((n-1)*(n-2)*(n-3))  - 3*(n-1)*(n-1)/( (n-2)*(n-3))   
-		c1*y/(var(v,true)^2) -c2
+		c1*y/(var(v)^2) -c2
 	else 
 		k - 3
 	end

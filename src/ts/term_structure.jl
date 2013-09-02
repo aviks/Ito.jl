@@ -1,6 +1,6 @@
 module TermStructure
 
-using Time
+using Ito.Time
 using Calendar 
 
 export YieldTermStructure, VolatilityTermStructure, FlatYieldTermStructure,
