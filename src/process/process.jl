@@ -1,7 +1,7 @@
 module Process
 
-using Time
-using TermStructure
+using Ito.Time
+using Ito.TermStructure
 using Calendar
 
 #Stochastic processes
