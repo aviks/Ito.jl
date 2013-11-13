@@ -7,7 +7,7 @@ w = ones(10) #weights
 
 @test_approx_eq mean(v, w)  4.3
 @test_approx_eq var(v, w)  2.23333333333
-@test_approx_eq std(v, w)  1.4944341181
+@test_approx_eq std(v, w) 1.4944341180973264 
 #answers verified via excel and quantlib
 @test_approx_eq skewness(v, w)  0.359543071407
 #Limited by excel precision for comparison. 
