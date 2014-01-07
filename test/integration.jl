@@ -1,4 +1,4 @@
-load("Ito")
+using Ito
 using Ito.Integration
 
 #All the following use the default convergence limit of 1e-9, and max 50 iterations

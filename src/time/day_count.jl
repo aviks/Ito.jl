@@ -108,8 +108,8 @@ function yearfraction(c::ISDAActualActual,  d_start::CalendarTime,  d_end::Calen
 
     y1 = year(d_start)
     y2 = year(d_end)
-    dib1 = isleap(d_start) ? 366.0 : 365.0
-    dib2 = isleap(d_end)   ? 366.0 : 365.0
+    dib1 = isleapyear(d_start) ? 366.0 : 365.0
+    dib2 = isleapyear(d_end)   ? 366.0 : 365.0
 
     sum = y2 - y1 - 1
 
@@ -132,7 +132,7 @@ function yearfraction(c::AFBActualActual,  d_start::CalendarTime,  d_end::Calend
 	sum = 0.0
 	while (temp>d_start)
 	    temp = newD2+years(-1)
-	    if (day(temp) == 28 && month(temp) == 2 && isleap(temp))
+	    if (day(temp) == 28 && month(temp) == 2 && isleapyear(temp))
 	        temp + days(1)
 	    end
 	    if (temp>=(d_start)) 
@@ -143,11 +143,11 @@ function yearfraction(c::AFBActualActual,  d_start::CalendarTime,  d_end::Calend
 
 	den = 365.0
 
-	if isleap(newD2) 
+	if isleapyear(newD2) 
 	    if (newD2 > ymd(year(newD2), February, 29) && d_start < ymd(year(newD2), February, 29) )
 	        den += 1.0
 	    end
-	elseif (isleap(d_start))
+	elseif (isleapyear(d_start))
 	    if (newD2 > (ymd(year(d_start), February, 29)) && d_start < (ymd(year(d_start), February, 29)))
 	        den += 1.0
 	    end
