@@ -1,3 +1,5 @@
+module Currencies
+
 immutable Currency
 	name::String
 	code::String
@@ -126,3 +128,9 @@ end
 
 import Base.show
 show(io::IO, curr::Currency)=print(io, "$(curr.code)")
+
+include("money.jl")
+include("exchangerate.jl")
+include("exchangeratemanager.jl")
+include("moneyop.jl") #moneyop depends on exchangeratemanager
+end
