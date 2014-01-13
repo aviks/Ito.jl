@@ -21,7 +21,31 @@ function add(ERM::ExchangeRateManager, ER::ExchangeRate, startdate::CalendarTime
 end
 
 function addKnownRates(ERM::ExchangeRateManager)
+	# currencies obsoleted by Euro
+	add(ERM, ExchangeRate(EURCurrency(), ATSCurrency(), 13.7603), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), BEFCurrency(), 40.3399), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), DEMCurrency(), 1.95583), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), ESPCurrency(), 166.386), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), FIMCurrency(), 5.94573), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), FRFCurrency(), 6.55957), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), GRDCurrency(), 340.750), ymd_hms(2001,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), IEPCurrency(), 0.787564), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), ITLCurrency(), 1936.27), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), LUFCurrency(), 40.3399), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), NLGCurrency(), 2.20371), ymd_hms(1999,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), PTECurrency(), 200.482), ymd_hms(1999,1,1,0,0,0), today())	
+	add(ERM, ExchangeRate(EURCurrency(), CYPCurrency(), 0.585274), ymd_hms(2008,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), EEKCurrency(), 15.6466), ymd_hms(2011,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), LVLCurrency(), 1.42287), ymd_hms(2014,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), MTLCurrency(), 2.32937), ymd_hms(2008,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), SITCurrency(), 239.64), ymd_hms(2007,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(EURCurrency(), SKKCurrency(), 30.1260), ymd_hms(2009,1,1,0,0,0), today())
 	
+    # other obsoleted currencies
+	add(ERM, ExchangeRate(TRYCurrency(), TRLCurrency(), 1000000.0), ymd_hms(2005,1,1,0,0,0), today())
+	add(ERM, ExchangeRate(RONCurrency(), ROLCurrency(), 10000.0), ymd_hms(2005,7,1,0,0,0), today())
+	add(ERM, ExchangeRate(PENCurrency(), PEICurrency(), 1000000.0), ymd_hms(1991,7,1,0,0,0), today())
+	add(ERM, ExchangeRate(PEICurrency(), PEHCurrency(), 1000.0), ymd_hms(1985,2,1,0,0,0), today())
 end
 
 function clear(ERM::ExchangeRateManager)

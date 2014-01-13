@@ -112,7 +112,11 @@ list_deprecated=[
 "NLG"=>"EUR",
 "PTE"=>"EUR",
 "SIT"=>"EUR",
-"SKK"=>"EUR"
+"SKK"=>"EUR",
+"TRL"=>"TRY",
+"ROL"=>"RON",
+"PEH"=>"PEI",
+"PEI"=>"PEN"
 ]
 
 # Codegen function 
