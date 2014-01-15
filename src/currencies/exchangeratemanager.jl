@@ -8,7 +8,7 @@ end
 
 type ExchangeRateManager
 	data::Dict{BigInt, Array{Entry}}
-	ExchangeRateManager()=new(Dict{BigInt, Array{Entry}}())
+	ExchangeRateManager()=(x=new(Dict{BigInt, Array{Entry}}()); addKnownRates(x); x)
 end
 
 # Add an exchange rate
@@ -17,7 +17,11 @@ end
 # and with overlapping date ranges, the latest one
 # added takes precedence during lookup.
 function add(ERM::ExchangeRateManager, ER::ExchangeRate, startdate::CalendarTime, enddate::CalendarTime)
-	ERM.data[hash(ER.source, ER.target)]=Entry(ER, startdate, enddate)
+	key=hash(ER.source, ER.target)
+	if !haskey(ERM.data, key)
+		ERM.data[key]=Array(Entry, 0)
+	end
+	push!(ERM.data[key], Entry(ER, startdate, enddate))
 end
 
 function addKnownRates(ERM::ExchangeRateManager)
@@ -150,3 +154,16 @@ function lookup(ERM::ExchangeRateManager, source::Currency, target::Currency, da
 	end
 		
 end
+
+function getInstance()
+	if !isdefined(:ERM_Instance)
+		global ERM_Instance=ExchangeRateManager()
+	end
+	return ERM_Instance
+end
+
+minDate=ymd_hms(1901, 1, 1, 0, 0, 0)
+maxDate=ymd_hms(2199, 12, 31, 0, 0, 0)
+add(ER::ExchangeRate, startdate::CalendarTime=minDate, enddate::CalendarTime=maxDate)=add(getInstance(), ER, startdate, enddate)
+clear()=clear(getInstance())
+lookup(source::Currency, target::Currency, date::CalendarTime=today(), ERType::Symbol=:Derived)=lookup(getInstance(), source, target, date, ERType)

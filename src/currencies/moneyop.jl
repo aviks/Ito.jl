@@ -1,7 +1,7 @@
 # Helper function 
-function convertTo(m::Money, target::Currency, ERM::ExchangeRateManager=ExchangeRateManager())
+function convertTo(m::Money, target::Currency)
 	if m.currency!=target
-		rate=lookup(ERM, m.currency, target)
+		rate=lookup(m.currency, target)
 		m=rounded(exchange(rate, m))
 	end
 end
@@ -12,13 +12,13 @@ function functionOperator(m1::Money, m2::Money, op::Function)
 	if m1.currency==m2.currency
 		return op(m1.value, m2.value)
 	elseif ConversionType==:BaseCurrencyConversion
-		tmp1=m1
+		tmp1=copy(m1)
 		convertToBase(tmp1)
-		tmp2=m2
+		tmp2=copy(m2)
 		convertToBase(tmp2)
 		return functionOperator(tpm1, tpm2, op)
 	elseif ConversionType==:AutomatedConversion
-		tmp=m2
+		tmp=copy(m2)
 		convertTo(tmp, m1.currency)
 		return functionOperator(m1, tmp, op)
 	else
