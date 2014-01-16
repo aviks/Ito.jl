@@ -21,7 +21,7 @@ function add(ERM::ExchangeRateManager, ER::ExchangeRate, startdate::CalendarTime
 	if !haskey(ERM.data, key)
 		ERM.data[key]=Array(Entry, 0)
 	end
-	push!(ERM.data[key], Entry(ER, startdate, enddate))
+	push!(ERM.data[key], Entry(ER, startdate, enddate))	
 end
 
 function addKnownRates(ERM::ExchangeRateManager)
@@ -53,14 +53,17 @@ function addKnownRates(ERM::ExchangeRateManager)
 end
 
 function clear(ERM::ExchangeRateManager)
-	ERM.data=Dict{BigInt, Array{Entry}}() # Delete the dictionary
-	addKnownRates(ERM)
+	ERM=ExchangeRateManager()
 end
 
 hash(c1::Currency, c2::Currency)=BigInt(min(c1.numeric, c2.numeric))*1000+BigInt(max(c1.numeric, c2.numeric))
-hashes(key::BigInt, c::Currency)=c.numeric==key%1000 || c.numeric==key/1000
+hashes(key::BigInt, c::Currency)=c.numeric==key%1000 || c.numeric==trunc(key/1000)
 
 function fetch(ERM::ExchangeRateManager, source::Currency, target::Currency, date::CalendarTime)
+	if !haskey(ERM.data, hash(source, target))
+		return nothing
+	end
+	
 	entries=ERM.data[hash(source, target)]
 	for entry in entries
 		if date>=entry.start && date<=entry.end_
@@ -80,7 +83,7 @@ function directLookup(ERM::ExchangeRateManager, source::Currency, target::Curren
 	end
 end
 
-function smartLookup(ERM::ExchangeRateManager, source::Currency, target::Currency, date::CalendarTime, forbidden::Array{Integer, 1})
+function smartLookup(ERM::ExchangeRateManager, source::Currency, target::Currency, date::CalendarTime, forbidden::Array{Int, 1})
 	fetchedRate=fetch(ERM, source, target, date)
 	
 	# direct exchange rates are preferred.
@@ -94,20 +97,20 @@ function smartLookup(ERM::ExchangeRateManager, source::Currency, target::Currenc
 	
 	for key in keys(ERM.data)
 		# we look for exchange-rate data which involve our source currency
-		if hashes(key, source) && length(ERM.data[key])!=0
+		if hashes(key, source) && length(ERM.data[key])!=0				
 			# ...whose other currency is not forbidden...
-			e=ERM.data[key][1]
+			e=ERM.data[BigInt(key)][1]
 			other= source==e.rate.source ? e.rate.target : e.rate.source
-			
 			if !in(other.numeric, forbidden)
 				# ...and which carries information for the requested date.
-				head=fetch(ERM, source, other, date)
-				
+				head=fetch(ERM, source, other, date)	
+
 				if head!=nothing
 					# if we can get to the target from here...
-					try
-						tail=smartLookup(ERM, other, target, date, forbidden)
+					try						
+						tail=smartLookup(ERM, other, target, date, forbidden)						
 						# ..we're done.
+						return chain(head, tail)
 					catch
 						# otherwise, we just discard this rate.
 					end
@@ -121,6 +124,7 @@ function smartLookup(ERM::ExchangeRateManager, source::Currency, target::Currenc
 end
 
 function lookup(ERM::ExchangeRateManager, source::Currency, target::Currency, date::CalendarTime, ERType::Symbol=:Derived)
+	
 	if source==target
 		return ExchangeRate(source, target, 1.0)
 	end
@@ -150,14 +154,16 @@ function lookup(ERM::ExchangeRateManager, source::Currency, target::Currency, da
 		end
 		
 	else
-		return smartLookup(EMR, source, target, date, Array(Int,0))
+		return smartLookup(ERM, source, target, date, Array(Int,0))
 	end
 		
 end
 
+# Singleton design pattern
 function getInstance()
-	if !isdefined(:ERM_Instance)
-		global ERM_Instance=ExchangeRateManager()
+	global ERM_Instance
+	if !isdefined(Currencies, :ERM_Instance)
+		ERM_Instance=ExchangeRateManager()
 	end
 	return ERM_Instance
 end
