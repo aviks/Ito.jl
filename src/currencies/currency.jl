@@ -1,3 +1,5 @@
+module Currencies
+
 immutable Currency
 	name::String
 	code::String
@@ -112,7 +114,11 @@ list_deprecated=[
 "NLG"=>"EUR",
 "PTE"=>"EUR",
 "SIT"=>"EUR",
-"SKK"=>"EUR"
+"SKK"=>"EUR",
+"TRL"=>"TRY",
+"ROL"=>"RON",
+"PEH"=>"PEI",
+"PEI"=>"PEN"
 ]
 
 # Codegen function 
@@ -122,3 +128,9 @@ end
 
 import Base.show
 show(io::IO, curr::Currency)=print(io, "$(curr.code)")
+
+include("money.jl")
+include("exchangerate.jl")
+include("exchangeratemanager.jl")
+include("moneyop.jl") #moneyop depends on exchangeratemanager
+end
