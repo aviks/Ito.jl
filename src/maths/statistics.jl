@@ -3,18 +3,23 @@ module Statistics
 
 import Distributions
 using Distributions
+using StatsBase
 # import Debug
 # using Debug
 
 import Base.mean, Base.std, Base.var
 
-export mean, var, std, kurtosis, skewness,
+export mean, var, std,  
 		gaussian_regret, gaussian_percentile, gaussian_top_percentile,  gaussian_shortfall, gaussian_average_shortfall, 
 		gaussian_expected_shortfall, gaussian_downside_variance, gaussian_downside_deviation, gaussian_value_at_risk,
 		semi_variance, semi_deviation, percentile, top_percentile, downside_variance, downside_deviation, 
 		shortfall, average_shortfall, expected_shortfall, value_at_risk, regret
 
-mean(v::AbstractVector, w::AbstractVector) = sum(v.*w)/sum(w)
+#if !isdefined(Main.StatsBase,:weights)
+#   weights(x) = x
+#   mean(v::AbstractVector, w::AbstractVector) = sum(v.*w)/sum(w)
+#end
+
 function var(v::AbstractVector, w::AbstractVector, m) 
 	n=length(v)
 	@assert (n>1)
@@ -24,16 +29,14 @@ function var(v::AbstractVector, w::AbstractVector, m)
 end
 std(v::AbstractVector, w::AbstractVector) = sqrt(var(v, w))
 
-var(v::AbstractVector, w::AbstractVector) = var(v, w, mean(v,w))
-skewness(v::AbstractVector, w::AbstractVector) = skewness(v,w, mean(v,w), true)
-kurtosis(v::AbstractVector, w::AbstractVector) = kurtosis(v,w, mean(v,w), true)
+var(v::AbstractVector, w::AbstractVector) = var(v, w, mean(v,weights(w)))
 
 gaussian_downside_variance(v::AbstractVector, w::AbstractVector) = gaussian_regret(v,w,0)
 gassian_downside_deviation(v::AbstractVector, w::AbstractVector) = sqrt(gaussian_downside_variance(v,w))
 
 #Dembo, Freeman "The Rules Of Risk", Wiley (2001)
 function gaussian_regret(v::AbstractVector, w::AbstractVector, target::Real)
-	m=mean(v,w)
+	m=mean(v,weights(w))
 	s = std(v, w)
 	variance = var(v, w)
 	f1 = variance + m*m -2*target*m + target*target
@@ -46,7 +49,7 @@ end
 
 function gaussian_percentile(v::AbstractVector, w::AbstractVector, percentile::Real)
 	@assert percentile > 0 && percentile < 1.0
-	m=mean(v,w)
+	m=mean(v,weights(w))
 	s=stdm(v,m)
 	quantile(Normal(m,s), percentile)
 end
@@ -66,7 +69,7 @@ end
 #Artzner, Delbaen, Eber and Heath, "Coherent measures of risk", Mathematical Finance 9 (1999)
 function gaussian_expected_shortfall(v::AbstractVector, w::AbstractVector, percentile::Real)
 	@assert percentile <1.0 && percentile >= 0.9
-	m=mean(v,w)
+	m=mean(v,weights(w))
 	s=stdm(v,m)
 	d=Normal(m,s)
 	var = quantile(1-percentile)
@@ -76,13 +79,13 @@ function gaussian_expected_shortfall(v::AbstractVector, w::AbstractVector, perce
 end
 
 function gaussian_shortfall(v::AbstractVector, w::AbstractVector, target::Real) 
-	m=mean(v,w)
+	m=mean(v,weights(w))
 	s=stdm(v,m)
 	cdf(Normal(m,s), target)
 end
 
 function gaussian_average_shortfall(v::AbstractVector, w::AbstractVector, target::Real)
-	m=mean(v,w)
+	m=mean(v,weights(w))
 	s=stdm(v,m)
 	d=Normal(m,s)
 	g=pdf(d,target)
@@ -93,8 +96,8 @@ end
 
 error_estimate(v::AbstractVector, w::AbstractVector) = sqrt(var(v,w)/length(v))
 
-semi_variance(v::AbstractVector, w::AbstractVector) = regret(v, mean(v,w))
-semi_deviation(v::AbstractVector, w::AbstractVector) = sqrt(semi_variance(v,w))
+semi_variance(v::AbstractVector, w::AbstractVector) = regret(v, mean(v,weights(w)))
+semi_deviation(v::AbstractVector, w::AbstractVector) = sqrt(semi_variance(v,weights(w)))
 
 downside_variance(v) = regret(v, 0)
 downside_deviation(v) = sqrt(downside_variance(v))
@@ -182,18 +185,6 @@ function top_percentile(v::AbstractVector, w::AbstractVector, p::Real)
 		i = i + w[ord[k]]
 	end
 	return vs[k]
-end
-
-function skewness(v::AbstractVector, w::AbstractVector, m, corrected::Bool)
-	n=length(v)
-	y, _ =expectation_value(v, w, (x)->(x-m)^3, (x)->true)
-	sigma = std(v)*sqrt((n-1)/n)
-	if corrected
-		@assert n>2
-		(y/(sigma*sigma*sigma)) * (sqrt(n*(n-1))/(n-2))
-	else 
-		(y/(sigma*sigma*sigma)) 
-	end
 end
 
 function kurtosis(v::AbstractVector, w::AbstractVector, m, corrected::Bool)
