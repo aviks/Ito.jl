@@ -11,7 +11,7 @@ environment:
   HOMEPATH: \Users\appveyor
 
 build_script:
-  - C:\projects\julia\bin\julia-debug-basic -e "Pkg.init(); run(`cp -r $(pwd()) $(Pkg.dir())/Ito`); Pkg.pin(\"Ito\"); Pkg.resolve()"
+  - C:\projects\julia\bin\julia-debug-readline -e "Pkg.init(); run(`cp -r $(pwd()) $(Pkg.dir())/Ito`); Pkg.pin(\"Ito\"); Pkg.resolve()"
 
 test_script:
   - C:\projects\julia\bin\julia-debug-readline -e "using Ito; @assert isdefined(:Ito); @assert typeof(Ito) === Module"
