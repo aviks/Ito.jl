@@ -17,4 +17,4 @@ before_install:
 script:
     - julia -e 'Pkg.init(); run(`ln -s $(pwd()) $(Pkg.dir("Ito"))`); Pkg.pin("Ito"); Pkg.resolve()'
     - julia -e 'using Ito; @assert isdefined(:Ito); @assert typeof(Ito) === Module'
-    - julia test/Ito.jl
+    - julia test/runtests.jl
