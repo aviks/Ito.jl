@@ -92,7 +92,7 @@ function businessDaysBetween(c::BusinessCalendar, from::CalendarTime, to::Calend
       elseif (from > to) 
           for d in to:days(1):from
               if (isBusinessDay(c, d)) 
-                  ++wd;
+                  wd += 1
               end
           end
           
@@ -102,11 +102,11 @@ function businessDaysBetween(c::BusinessCalendar, from::CalendarTime, to::Calend
           wd -= 1
       end
       if (isBusinessDay(c, to) && !includeLast) 
-          wd -1
+          wd -= 1
       end
 
       if (from > to) 
-          wd = -wd;
+          wd = -wd
       end
   end
 
