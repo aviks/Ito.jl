@@ -1,4 +1,5 @@
 install:
+  - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
   - cinst 7zip
 # Download most recent Julia Windows binary
   - ps: (new-object net.webclient).DownloadFile('http://s3.amazonaws.com/julialang/bin/winnt/x64/0.3/julia-0.3.0-prerelease-win64.exe', 'C:\projects\julia-binary.exe')
